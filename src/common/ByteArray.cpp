@@ -4,8 +4,10 @@ ByteArray::ByteArray() {
     internalBuffer = std::vector<uint8_t>();
 }
 
-// Esse metodo não pode ser const pois quando eu for receber mensagens o recv vai
-// precisar que o ponteiro não seja constante
+const char* ByteArray::data() const {
+    return reinterpret_cast<const char *>(internalBuffer.data());
+}
+
 char *ByteArray::data() {
     return reinterpret_cast<char *>(internalBuffer.data());
 }

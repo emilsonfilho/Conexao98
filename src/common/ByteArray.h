@@ -10,6 +10,7 @@ private:
 public:
     ByteArray();
 
+    [[nodiscard]] const char* data() const;
     [[nodiscard]] char* data();
     [[nodiscard]] size_t size() const;
 

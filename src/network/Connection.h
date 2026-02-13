@@ -16,7 +16,7 @@ public:
     Connection(SOCKET sock, sockaddr_in addr, ConnectionListener* listen);
 
     void sendData(ByteArray data) const;
-    void listen() const;
+    void listen();
 
     [[nodiscard]] std::string getSenderId() const;
 };

@@ -10,7 +10,9 @@ add_executable(server server/main_server.cpp
         src/protocol/Message.h
         src/protocol/MessageType.h
         src/common/ByteArray.cpp
-        src/common/ByteArray.h) # adiciona um alvo
+        src/common/ByteArray.h
+        src/network/NetworkServer.cpp
+        src/network/NetworkServer.h) # adiciona um alvo
 add_executable(client client/main_client.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h

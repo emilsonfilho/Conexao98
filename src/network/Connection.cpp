@@ -4,7 +4,7 @@
 #include <ws2tcpip.h>
 #include <stdexcept>
 
-Connection::Connection(const SOCKET sock, sockaddr_in addr, ConnectionListener* listen):
+Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
 socket(sock), address(addr), listener(listen){}
 
 std::string Connection::getSenderId() const {
@@ -25,7 +25,7 @@ void Connection::sendData(ByteArray data) const {
         }
 }
 
-void Connection::listen() const {
+void Connection::listen() {
         char buff[1025];
 
         while (true) {

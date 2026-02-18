@@ -4,6 +4,14 @@ ByteArray::ByteArray() {
     internalBuffer = std::vector<uint8_t>();
 }
 
+ByteArray::ByteArray(const std::string &str): ByteArray() {
+    write(str.c_str(), str.size());
+}
+
+ByteArray::~ByteArray() {
+    clear();
+}
+
 const char* ByteArray::data() const {
     return reinterpret_cast<const char *>(internalBuffer.data());
 }

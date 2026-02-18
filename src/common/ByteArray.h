@@ -3,12 +3,16 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 class ByteArray {
 private:
     std::vector<uint8_t> internalBuffer;
 public:
     ByteArray();
+    ~ByteArray();
+
+    explicit ByteArray(const std::string& str);
 
     [[nodiscard]] const char* data() const;
     [[nodiscard]] char* data();

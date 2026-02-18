@@ -7,6 +7,10 @@
 
 NetworkClient::NetworkClient(ConnectionListener *listener): conn(nullptr), listener(listener), wsaData(WSAData()) {}
 
+NetworkClient::~NetworkClient() {
+    delete conn;
+}
+
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         std::cout << "WSAStartup() failed \n";
@@ -35,5 +39,5 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
 
 void NetworkClient::sendMessage(const std::string& message) const {
     const ByteArray data(message);
-    conn->sendData(data);
+    conn->sendData(ByteArray(message));
 }

@@ -13,6 +13,7 @@ private:
     WSADATA wsaData;
 public:
     explicit NetworkClient(ConnectionListener* listener);
+    ~NetworkClient();
 
     void connectToServer(const char* ip, uint16_t port);
 

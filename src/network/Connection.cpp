@@ -14,7 +14,7 @@ std::string Connection::getSenderId() const {
         return std::string(ip) + ":" + std::to_string(port);
 }
 
-void Connection::sendData(ByteArray data) const {
+void Connection::sendData(const ByteArray& data) const {
         if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERROR) {
                 const int errorCode = WSAGetLastError();
 

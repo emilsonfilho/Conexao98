@@ -31,9 +31,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
 
 
 void NetworkClient::sendMessage(const char *message) const {
-    const int result = send(sock, message, static_cast<int>(strlen(message)), 0);
-
-    if (result == SOCKET_ERROR) {
+    if (const int result = send(sock, message, static_cast<int>(strlen(message)), 0); result == SOCKET_ERROR) {
         std::cerr << "Error writing to socket.\n";
         closesocket(sock);
         return;

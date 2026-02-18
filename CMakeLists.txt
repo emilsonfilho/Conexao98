@@ -19,7 +19,9 @@ add_executable(client client/main_client.cpp
         src/protocol/Message.h
         src/protocol/MessageType.h
         src/common/ByteArray.cpp
-        src/common/ByteArray.h)
+        src/common/ByteArray.h
+        src/network/NetworkClient.cpp
+        src/network/NetworkClient.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

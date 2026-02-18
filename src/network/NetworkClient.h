@@ -4,17 +4,19 @@
 #include <winsock2.h>
 
 #include "ConnectionListener.h"
+#include "Connection.h"
 
 class NetworkClient {
 private:
-    SOCKET sock;
+    Connection* conn;
     ConnectionListener* listener;
     WSADATA wsaData;
 public:
     explicit NetworkClient(ConnectionListener* listener);
 
     void connectToServer(const char* ip, uint16_t port);
-    void sendMessage(const char* message) const;
+
+    void sendMessage(const std::string& message) const;
 };
 
 

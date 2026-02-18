@@ -3,7 +3,9 @@
 #include <iostream>
 #include <ws2tcpip.h>
 
-NetworkClient::NetworkClient(ConnectionListener *listener): sock(INVALID_SOCKET), listener(listener), wsaData(WSAData()) {}
+#include "../common/ByteArray.h"
+
+NetworkClient::NetworkClient(ConnectionListener *listener): conn(nullptr), listener(listener), wsaData(WSAData()) {}
 
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -11,13 +13,13 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         return;
     }
 
-    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sock == INVALID_SOCKET) {
         std::cout << "Error creating socket.\n";
         return;
     }
 
-    sockaddr_in address;
+    sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_port = htons(port);
     inet_pton(AF_INET, ip, &address.sin_addr);
@@ -27,13 +29,11 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         closesocket(sock);
         return;
     }
+
+    conn = new Connection(sock, address, this->listener);
 }
 
-
-void NetworkClient::sendMessage(const char *message) const {
-    if (const int result = send(sock, message, static_cast<int>(strlen(message)), 0); result == SOCKET_ERROR) {
-        std::cerr << "Error writing to socket.\n";
-        closesocket(sock);
-        return;
-    }
+void NetworkClient::sendMessage(const std::string& message) const {
+    const ByteArray data(message);
+    conn->sendData(data);
 }

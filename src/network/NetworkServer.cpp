@@ -1,8 +1,8 @@
-#include "NetworkServer.h"
-
-#include <iostream>
-#include <stdexcept>
 #include <ws2tcpip.h>
+#include <stdexcept>
+#include <iostream>
+
+#include "NetworkServer.h"
 
 NetworkServer::NetworkServer(ConnectionListener* listen): appListener(listen), isActive(false) {
         this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

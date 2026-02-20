@@ -2,6 +2,7 @@
 #define CONEXAO98_NETWORKSERVER_H
 
 #include <winsock2.h>
+#include <atomic>
 #include <vector>
 
 #include "ConnectionListener.h"
@@ -11,7 +12,7 @@ class NetworkServer {
 private:
     SOCKET sock;
     ConnectionListener* appListener;
-    bool isActive;
+    std::atomic<bool> isActive;
     std::vector<Connection*> activeConnections;
 public:
     NetworkServer(ConnectionListener* listen);

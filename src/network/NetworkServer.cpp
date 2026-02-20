@@ -1,4 +1,5 @@
 #include <ws2tcpip.h>
+#include <thread>
 #include <stdexcept>
 #include <iostream>
 
@@ -22,7 +23,7 @@ void NetworkServer::start(uint16_t port) {
         listen(sock, 5);
         isActive = true;
 
-        while (true) {
+        while (isActive) {
                 sockaddr_in client{};
                 socklen_t clientLen = sizeof(client);
 
@@ -37,14 +38,15 @@ void NetworkServer::start(uint16_t port) {
                          << inet_ntoa(client.sin_addr)
                          << "\n";
 
-                Connection* newConn = new Connection(clientSock, client, appListener);
+                auto* newConn = new Connection(clientSock, client, appListener);
 
                 activeConnections.push_back(newConn);
-                newConn->listen();
 
-                std::cout << "Client disconnected. Let's wait for another one.\n";
+                std::thread listenerThread([newConn]() {
+                        newConn->listen();
+                });
 
-                delete newConn; // You'll delete this later
-                activeConnections.clear();
+
+                listenerThread.detach(); // intentional (for a while) memory leak
         }
 }

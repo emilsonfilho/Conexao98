@@ -32,16 +32,19 @@ int main() {
         // 3. Conecta (Certifique-se que o Server está rodando antes!)
         client.connectToServer("127.0.0.1", 3000);
 
-        // 4. Envia a mensagem de teste
-        const char* msg = "Ola Servidor! Sou o Cliente C++.";
-        std::cout << "Enviando: " << msg << "\n";
+        std::cout << "Bem-vindo ao Conexao98!\nDigite suas mensagens ou 'sair' para fechar.\n";
 
-        client.sendMessage(msg);
+        std::string input;
+        while (true) {
+            std::getline(std::cin, input);
 
-        // Mantém o console aberto um pouco para ver o resultado se for executável direto
-        std::cout << "Mensagem enviada. Pressione Enter para sair.\n";
-        std::cin.get();
+            if (input == "sair")
+                break;
 
+            client.sendMessage(input);
+        }
+
+     std::cout << "Jah vai tarde :P\n";
     } catch (std::exception& e) {
         std::cerr << "Erro no cliente: " << e.what() << "\n";
     }

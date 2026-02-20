@@ -1,8 +1,7 @@
-#include "NetworkClient.h"
-
-#include <iostream>
 #include <ws2tcpip.h>
+#include <iostream>
 
+#include "NetworkClient.h"
 #include "../common/ByteArray.h"
 
 NetworkClient::NetworkClient(ConnectionListener *listener): conn(nullptr), listener(listener), wsaData(WSAData()) {}
@@ -33,6 +32,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         closesocket(sock);
         return;
     }
+
 
     conn = new Connection(sock, address, this->listener);
 }

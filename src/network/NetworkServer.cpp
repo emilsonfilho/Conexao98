@@ -46,7 +46,6 @@ void NetworkServer::start(uint16_t port) {
                         newConn->listen();
                 });
 
-
                 listenerThread.detach(); // intentional (for a while) memory leak
         }
 }

@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
-socket(sock), address(addr), listener(listen){}
+socket(sock), address(addr), listener(listen), isRunning(true) {}
 
 std::string Connection::getSenderId() const {
         char* ip = inet_ntoa(address.sin_addr);
@@ -28,7 +28,7 @@ void Connection::sendData(const ByteArray& data) const {
 void Connection::listen() {
         char buff[1025];
 
-        while (true) {
+        while (isRunning) {
                 const int iResult = recv(socket, buff, 1024, 0);
 
                 if (iResult > 0) {
@@ -45,4 +45,8 @@ void Connection::listen() {
         }
 
         closesocket(socket);
+}
+
+void Connection::stop() {
+        isRunning = false;
 }

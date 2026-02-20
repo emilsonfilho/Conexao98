@@ -1,4 +1,5 @@
 #include <ws2tcpip.h>
+#include <thread>
 #include <iostream>
 
 #include "NetworkClient.h"
@@ -33,8 +34,13 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         return;
     }
 
-
     conn = new Connection(sock, address, this->listener);
+
+    std::thread listenerThread([this]() {
+        this->conn->listen();
+    });
+
+    listenerThread.detach();
 }
 
 void NetworkClient::sendMessage(const std::string& message) const {

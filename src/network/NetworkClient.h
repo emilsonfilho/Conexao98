@@ -5,6 +5,7 @@
 
 #include "ConnectionListener.h"
 #include "Connection.h"
+#include "../protocol/Message.h"
 
 class NetworkClient {
 private:
@@ -17,7 +18,7 @@ public:
 
     void connectToServer(const char* ip, uint16_t port);
 
-    void sendMessage(const std::string& message) const;
+    void sendMessage(Message* msg) const;
 };
 
 

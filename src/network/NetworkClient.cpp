@@ -43,7 +43,6 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     listenerThread.detach();
 }
 
-void NetworkClient::sendMessage(const std::string& message) const {
-    const ByteArray data(message);
-    conn->sendData(ByteArray(message));
+void NetworkClient::sendMessage(Message* msg) const {
+    conn->sendData(msg->serialize());
 }

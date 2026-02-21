@@ -23,6 +23,7 @@ void NetworkServer::start(uint16_t port) {
         listen(sock, 5);
         isActive = true;
 
+
         while (isActive) {
                 sockaddr_in client{};
                 socklen_t clientLen = sizeof(client);
@@ -40,7 +41,7 @@ void NetworkServer::start(uint16_t port) {
 
                 auto* newConn = new Connection(clientSock, client, appListener);
 
-                activeConnections.push_back(newConn);
+                appListener->onConnectionCreated(newConn);
 
                 std::thread listenerThread([newConn]() {
                         newConn->listen();

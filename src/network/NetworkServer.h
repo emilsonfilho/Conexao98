@@ -13,7 +13,6 @@ private:
     SOCKET sock;
     ConnectionListener* appListener;
     std::atomic<bool> isActive;
-    std::vector<Connection*> activeConnections;
 public:
     NetworkServer(ConnectionListener* listen);
 

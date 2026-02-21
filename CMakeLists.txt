@@ -12,7 +12,21 @@ add_executable(server server/main_server.cpp
         src/common/ByteArray.cpp
         src/common/ByteArray.h
         src/network/NetworkServer.cpp
-        src/network/NetworkServer.h) # adiciona um alvo
+        src/network/NetworkServer.h
+        src/app/handlers/JoinHandler.cpp
+        src/app/handlers/JoinHandler.h
+        src/protocol/messages/JoinMessage.cpp
+        src/protocol/messages/JoinMessage.h
+        src/protocol/messages/ChatMessage.cpp
+        src/protocol/messages/ChatMessage.h
+        src/app/handlers/ChatHandler.cpp
+        src/app/handlers/ChatHandler.h
+        src/protocol/MessageFactory.cpp
+        src/protocol/MessageFactory.h
+        src/app/ChatManager.cpp
+        src/app/ChatManager.h
+        src/app/UserSession.cpp
+        src/app/UserSession.h) # adiciona um alvo
 add_executable(client client/main_client.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
@@ -21,7 +35,22 @@ add_executable(client client/main_client.cpp
         src/common/ByteArray.cpp
         src/common/ByteArray.h
         src/network/NetworkClient.cpp
-        src/network/NetworkClient.h)
+        src/network/NetworkClient.h
+        src/app/ChatManager.cpp
+        src/app/ChatManager.h
+        src/app/UserSession.cpp
+        src/app/UserSession.h
+        src/app/handlers/MessageHandler.h
+        src/app/handlers/JoinHandler.cpp
+        src/app/handlers/JoinHandler.h
+        src/protocol/messages/JoinMessage.cpp
+        src/protocol/messages/JoinMessage.h
+        src/protocol/messages/ChatMessage.cpp
+        src/protocol/messages/ChatMessage.h
+        src/app/handlers/ChatHandler.cpp
+        src/app/handlers/ChatHandler.h
+        src/protocol/MessageFactory.cpp
+        src/protocol/MessageFactory.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

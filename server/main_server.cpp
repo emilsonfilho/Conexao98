@@ -1,20 +1,8 @@
 #include "../src/network/NetworkServer.h"
 #include <iostream>
 
+#include "../src/app/ChatManager.h"
 #include "../src/network/ConnectionListener.h"
-
-class FofoqueiroListener : public ConnectionListener {
-public:
-    void onMessageReceived(Connection& conn, const ByteArray& data) override {
-        // Truque para imprimir o ByteArray como texto
-        std::string texto(data.data(), data.size());
-        std::cout << "[SERVER] O cliente " << conn.getSenderId() << " disse: " << texto << "\n";
-    }
-
-    void onDisconnected(Connection& conn) override {
-        std::cout << "[SERVER] O cliente " << conn.getSenderId() << " foi embora.\n";
-    }
-};
 
 int main() {
     // 1. Inicia o Winsock (Obrigatório no Windows)
@@ -26,7 +14,8 @@ int main() {
 
     try {
         // 2. Cria o Listener de teste
-        FofoqueiroListener debugListener;
+        ChatManager debugListener;
+        debugListener.initializeHandlers();
 
         // 3. Cria o servidor passando o listener
         // (Certifique-se que seu NetworkServer aceita o listener no construtor!)

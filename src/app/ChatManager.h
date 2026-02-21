@@ -1,0 +1,29 @@
+#ifndef CONEXAO98_CHATMANAGER_H
+#define CONEXAO98_CHATMANAGER_H
+
+#include <memory>
+#include <unordered_map>
+
+#include "UserSession.h"
+
+#include "../network/ConnectionListener.h"
+#include "../protocol/MessageFactory.h"
+#include "handlers/MessageHandler.h"
+
+class ChatManager : public ConnectionListener {
+private:
+    std::unordered_map<Connection*, UserSession*> sessions;
+    std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
+public:
+    ChatManager() = default;
+    void initializeHandlers();
+
+    void broadcast(Message* msg, const UserSession* ignoreSession = nullptr);
+
+    void onMessageReceived(Connection &conn, const ByteArray &data) override;
+    void onConnectionCreated(Connection *conn) override;
+    void onDisconnected(Connection &conn) override;
+};
+
+
+#endif //CONEXAO98_CHATMANAGER_H

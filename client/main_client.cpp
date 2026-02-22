@@ -24,7 +24,7 @@ public:
         }
     }
 
-    void onConnectionCreated(Connection *conn) override {
+    void onConnectionCreated(std::unique_ptr<Connection> conn) override {
         std::cout << "[CLIENT] Conexao98!\n";
     }
 

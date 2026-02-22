@@ -11,7 +11,7 @@ class MessageHandler {
 public:
     virtual ~MessageHandler() = default;
 
-    virtual void handle(ChatManager *manager, UserSession *session, std::unique_ptr<Message> msg) = 0;
+    virtual void handle(ChatManager *manager, UserSession& session, std::unique_ptr<Message> msg) = 0;
 };
 
 #endif //CONEXAO98_MESSAGEHANDLER_H

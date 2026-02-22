@@ -6,7 +6,7 @@
 #include "MessageHandler.h"
 
 class ChatHandler : public MessageHandler {
-    void handle(ChatManager *manager, UserSession *session, std::unique_ptr<Message> msg) override;
+    void handle(ChatManager *manager, UserSession& session, std::unique_ptr<Message> msg) override;
 };
 
 

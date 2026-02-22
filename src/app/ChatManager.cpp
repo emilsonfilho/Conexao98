@@ -18,10 +18,10 @@ void ChatManager::initializeHandlers() {
     );
 }
 
-void ChatManager::broadcast(Message *msg, const UserSession* ignoreSession) {
+void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
     for (auto& [user, session] : sessions) {
         std::cout << "Avaliando " << session->getNickname() << '\n';
-        if (session != ignoreSession)
+        if (session.get() != &ignoreSession)
             session->send(msg);
     }
 }
@@ -35,7 +35,7 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         return;
     }
 
-    UserSession* user = sessions.at(&conn);
+    UserSession& user = *sessions.at(&conn);
 
     if (auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
         itHandler->second->handle(this, user, std::move(msg));
@@ -46,14 +46,12 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
 void ChatManager::onConnectionCreated(Connection *conn) {
     sessions.emplace(
         conn,
-        new UserSession(conn)
+        std::make_unique<UserSession>(conn)
     );
 }
 
 void ChatManager::onDisconnected(Connection &conn) {
-    const UserSession* user = sessions.at(&conn);
+    const std::unique_ptr<UserSession> user = std::move(sessions.at(&conn));
 
     sessions.erase(&conn);
-
-    delete user;
 }

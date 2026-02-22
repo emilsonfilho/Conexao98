@@ -12,13 +12,13 @@
 
 class ChatManager : public ConnectionListener {
 private:
-    std::unordered_map<Connection*, UserSession*> sessions;
+    std::unordered_map<Connection*, std::unique_ptr<UserSession>> sessions;
     std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
 public:
     ChatManager() = default;
     void initializeHandlers();
 
-    void broadcast(Message* msg, const UserSession* ignoreSession = nullptr);
+    void broadcast(Message* msg, const UserSession& ignoreSession);
 
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
     void onConnectionCreated(Connection *conn) override;

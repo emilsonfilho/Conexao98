@@ -7,7 +7,7 @@
 #include "messages/JoinMessage.h"
 #include "messages/ChatMessage.h"
 
-Message *MessageFactory::create(const ByteArray &data) {
+std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
 
 
 
@@ -25,7 +25,7 @@ Message *MessageFactory::create(const ByteArray &data) {
 
         const std::string nick(data.data() + 3, nickSize);
 
-        return new JoinMessage(nick);
+        return std::make_unique<JoinMessage>(nick);
     }
 
     if (type == MessageType::CHAT) {
@@ -42,7 +42,7 @@ Message *MessageFactory::create(const ByteArray &data) {
         const size_t textStart = 3 + nickSize;
         const std::string text(data.data() + textStart, data.size() - textStart);
 
-        return new ChatMessage(nick, text);
+        return std::make_unique<ChatMessage>(nick, text);
     }
 
     std::cout << "No MessageType corresponding\n";

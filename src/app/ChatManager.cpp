@@ -28,7 +28,7 @@ void ChatManager::broadcast(Message *msg, const UserSession* ignoreSession) {
 
 void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
     std::cout << "Teste de chegada no ChatManager onMessageReceived\n";
-    Message* msg = MessageFactory::create(data);
+    std::unique_ptr<Message> msg = MessageFactory::create(data);
 
     if (msg == nullptr) {
         std::cout << "Error while creating message in onMessageReceived\n";
@@ -38,11 +38,9 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
     UserSession* user = sessions.at(&conn);
 
     if (auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
-        itHandler->second->handle(this, user, msg);
+        itHandler->second->handle(this, user, std::move(msg));
     else
         std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
-
-    delete msg;
 }
 
 void ChatManager::onConnectionCreated(Connection *conn) {

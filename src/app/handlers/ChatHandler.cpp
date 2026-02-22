@@ -5,8 +5,8 @@
 #include "../ChatManager.h"
 #include "../../protocol/messages/ChatMessage.h"
 
-void ChatHandler::handle(ChatManager *manager, UserSession *session, Message *msg) {
-    const auto chatMsg = dynamic_cast<ChatMessage*>(msg);
+void ChatHandler::handle(ChatManager *manager, UserSession *session, const std::unique_ptr<Message> msg) {
+    const auto chatMsg = static_cast<ChatMessage*>(msg.get());
 
     if (chatMsg == nullptr) return;
 

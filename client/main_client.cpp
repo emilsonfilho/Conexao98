@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <thread> // Para pausas se necessário
 #include "../src/network/NetworkClient.h"
@@ -10,17 +11,16 @@
 class ClientListener : public ConnectionListener {
 public:
     void onMessageReceived(Connection& conn, const ByteArray& data) override {
-        Message* msg = MessageFactory::create(data);
+        std::unique_ptr<Message> msg = MessageFactory::create(data);
         if (msg != nullptr) {
             // Se for mensagem de chat, a gente imprime só o conteúdo!
             if (msg->getType() == MessageType::CHAT) {
-                auto* chatMsg = dynamic_cast<ChatMessage*>(msg);
+                auto* chatMsg = static_cast<ChatMessage*>(msg.get());
                 std::cout << "[" << chatMsg->getNickname() << "]: " << chatMsg->getContent() << "\n";
             } else if (msg->getType() == MessageType::JOIN) {
-                auto* joinMsg = dynamic_cast<JoinMessage*>(msg);
+                auto* joinMsg = static_cast<JoinMessage*>(msg.get());
                 std::cout << ">>> " << joinMsg->getNickname() << " entrou no servidor! <<<\n";
             }
-            delete msg;
         }
     }
 

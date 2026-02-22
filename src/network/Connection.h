@@ -3,6 +3,7 @@
 
 #include <winsock2.h>
 #include <string>
+#include <thread>
 #include <atomic>
 
 #include "ConnectionListener.h"
@@ -13,10 +14,13 @@ private:
     SOCKET socket;
     sockaddr_in address;
     ConnectionListener* listener;
-    std::atomic<bool> isRunning;
+    std::thread listenerThread;
+    std::atomic<bool> isActive;
 public:
     Connection(SOCKET sock, sockaddr_in addr, ConnectionListener* listen);
+    ~Connection();
 
+    void start();
     void sendData(const ByteArray& data) const;
     void listen();
     void stop();

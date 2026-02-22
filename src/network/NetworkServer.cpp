@@ -5,6 +5,8 @@
 
 #include "NetworkServer.h"
 
+#include <memory>
+
 NetworkServer::NetworkServer(ConnectionListener* listen): appListener(listen), isActive(false) {
         this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
@@ -39,14 +41,8 @@ void NetworkServer::start(uint16_t port) {
                          << inet_ntoa(client.sin_addr)
                          << "\n";
 
-                auto* newConn = new Connection(clientSock, client, appListener);
+                auto newConn = std::make_unique<Connection>(clientSock, client, appListener);
 
-                appListener->onConnectionCreated(newConn);
-
-                std::thread listenerThread([newConn]() {
-                        newConn->listen();
-                });
-
-                listenerThread.detach(); // intentional (for a while) memory leak
+                appListener->onConnectionCreated(std::move(newConn));
         }
 }

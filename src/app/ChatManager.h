@@ -21,7 +21,7 @@ public:
     void broadcast(Message* msg, const UserSession& ignoreSession);
 
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
-    void onConnectionCreated(Connection *conn) override;
+    void onConnectionCreated(std::unique_ptr<Connection> conn) override;
     void onDisconnected(Connection &conn) override;
 };
 

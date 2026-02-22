@@ -43,10 +43,14 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
 }
 
-void ChatManager::onConnectionCreated(Connection *conn) {
+void ChatManager::onConnectionCreated(std::unique_ptr<Connection> conn) {
+    Connection* rawId = conn.get();
+
+    rawId->start();
+
     sessions.emplace(
-        conn,
-        std::make_unique<UserSession>(conn)
+        rawId,
+        std::make_unique<UserSession>(std::move(conn))
     );
 }
 

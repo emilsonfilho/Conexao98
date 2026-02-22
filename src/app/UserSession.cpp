@@ -1,8 +1,6 @@
 #include "UserSession.h"
 
-UserSession::UserSession(Connection *conn) {
-    connection = conn;
-}
+UserSession::UserSession(std::unique_ptr<Connection> conn) : conn(std::move(conn)) {}
 
 void UserSession::setNickname(const std::string& nick) {
     nickname = nick;
@@ -12,10 +10,10 @@ std::string UserSession::getNickname() const {
     return nickname;
 }
 
-Connection* UserSession::getConnection() const {
-    return connection;
+Connection& UserSession::getConnection() const {
+    return *conn;
 }
 
 void UserSession::send(Message *msg) const {
-    connection->sendData(msg->serialize());
+    conn->sendData(msg->serialize());
 }

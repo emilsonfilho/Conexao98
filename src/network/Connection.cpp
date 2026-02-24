@@ -8,15 +8,17 @@ Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionList
 socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
-        isActive = false;
+        stop();
 
         if (socket != INVALID_SOCKET) {
                 shutdown(socket, SD_BOTH);
                 closesocket(socket);
         }
 
-        if (listenerThread.joinable())
+        if (listenerThread.joinable() && listenerThread.get_id() != std::this_thread::get_id())
                 listenerThread.join();
+        else if (listenerThread.get_id() == std::this_thread::get_id())
+                listenerThread.detach();
 }
 
 void Connection::start() {
@@ -47,22 +49,15 @@ void Connection::listen() {
         char buff[1025];
 
         while (isActive) {
-                const int iResult = recv(socket, buff, 1024, 0);
-
-                if (iResult > 0) {
+                if (const int iResult = recv(socket, buff, 1024, 0); iResult > 0) {
                         ByteArray data;
                         data.write(buff, iResult);
-                        listener->onMessageReceived(*this, data);
-                } else if (iResult == 0) {
-                        listener->onDisconnected(*this);
-                        break;
+                        if (listener) listener->onMessageReceived(*this, data);
                 } else {
-                        listener->onDisconnected(*this);
-                        break;
+                        if (listener) listener->onDisconnected(*this);
+                        return;
                 }
         }
-
-        closesocket(socket);
 }
 
 void Connection::stop() {

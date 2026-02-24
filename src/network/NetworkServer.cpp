@@ -1,11 +1,10 @@
 #include <ws2tcpip.h>
-#include <thread>
+#include <memory>
 #include <stdexcept>
 #include <iostream>
 
 #include "NetworkServer.h"
 
-#include <memory>
 
 NetworkServer::NetworkServer(ConnectionListener* listen): appListener(listen), isActive(false) {
         this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

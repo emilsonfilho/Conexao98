@@ -10,15 +10,12 @@ socket(sock), address(addr), listener(listen), isActive(true) {}
 Connection::~Connection() {
         stop();
 
-        if (socket != INVALID_SOCKET) {
-                shutdown(socket, SD_BOTH);
-                closesocket(socket);
+        if (listenerThread.joinable()) {
+                if (listenerThread.get_id() == std::this_thread::get_id())
+                        listenerThread.detach();
+                else
+                        listenerThread.join();
         }
-
-        if (listenerThread.joinable() && listenerThread.get_id() != std::this_thread::get_id())
-                listenerThread.join();
-        else if (listenerThread.get_id() == std::this_thread::get_id())
-                listenerThread.detach();
 }
 
 void Connection::start() {
@@ -62,4 +59,10 @@ void Connection::listen() {
 
 void Connection::stop() {
         isActive = false;
+
+        if (socket != INVALID_SOCKET) {
+                shutdown(socket, SD_BOTH);
+                closesocket(socket);
+                socket = INVALID_SOCKET;
+        }
 }

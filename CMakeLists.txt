@@ -50,7 +50,8 @@ add_executable(client client/main_client.cpp
         src/app/handlers/ChatHandler.cpp
         src/app/handlers/ChatHandler.h
         src/protocol/MessageFactory.cpp
-        src/protocol/MessageFactory.h)
+        src/protocol/MessageFactory.h
+        src/common/Types.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

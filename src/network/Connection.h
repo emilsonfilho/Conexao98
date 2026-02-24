@@ -8,9 +8,11 @@
 
 #include "ConnectionListener.h"
 #include "../common/ByteArray.h"
+#include "../common/Types.h"
 
 class Connection {
 private:
+    ConnectionId id;
     SOCKET socket;
     sockaddr_in address;
     ConnectionListener* listener;
@@ -26,6 +28,8 @@ public:
     void stop();
 
     [[nodiscard]] std::string getSenderId() const;
+    ConnectionId getId() const;
+    void setId(ConnectionId id);
 };
 
 #endif //CONEXAO98_CONNECTION_H

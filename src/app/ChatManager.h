@@ -12,7 +12,9 @@
 
 class ChatManager : public ConnectionListener {
 private:
-    std::unordered_map<Connection*, std::unique_ptr<UserSession>> sessions;
+    ConnectionId nextConnectionId = 1;
+
+    std::unordered_map<ConnectionId, std::unique_ptr<UserSession>> sessions;
     std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
 public:
     ChatManager() = default;

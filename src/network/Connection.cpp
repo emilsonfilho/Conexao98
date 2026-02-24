@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
-socket(sock), address(addr), listener(listen), isActive(true) {}
+id(0), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
         stop();
@@ -65,4 +65,12 @@ void Connection::stop() {
                 closesocket(socket);
                 socket = INVALID_SOCKET;
         }
+}
+
+ConnectionId Connection::getId() const {
+        return id;
+}
+
+void Connection::setId(ConnectionId id) {
+        this->id = id;
 }

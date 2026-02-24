@@ -35,7 +35,7 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         return;
     }
 
-    UserSession& user = *sessions.at(&conn);
+    UserSession& user = *sessions.at(conn.getId());
 
     if (auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
         itHandler->second->handle(this, user, std::move(msg));
@@ -44,18 +44,21 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
 }
 
 void ChatManager::onConnectionCreated(std::unique_ptr<Connection> conn) {
-    Connection* rawId = conn.get();
+    ConnectionId id = nextConnectionId++;
+    conn->setId(id);
 
-    rawId->start();
+    conn.get()->start();
 
     sessions.emplace(
-        rawId,
+        id,
         std::make_unique<UserSession>(std::move(conn))
     );
 }
 
 void ChatManager::onDisconnected(Connection &conn) {
-    const std::unique_ptr<UserSession> user = std::move(sessions.at(&conn));
+    ConnectionId connId = conn.getId();
 
-    sessions.erase(&conn);
+    const std::unique_ptr<UserSession> user = std::move(sessions.at(connId));
+
+    sessions.erase(connId);
 }

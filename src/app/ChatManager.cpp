@@ -47,12 +47,11 @@ void ChatManager::onConnectionCreated(std::unique_ptr<Connection> conn) {
     ConnectionId id = nextConnectionId++;
     conn->setId(id);
 
-    conn.get()->start();
-
     sessions.emplace(
         id,
         std::make_unique<UserSession>(std::move(conn))
     );
+    conn->start();
 }
 
 void ChatManager::onDisconnected(Connection &conn) {

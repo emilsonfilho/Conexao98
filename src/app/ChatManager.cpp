@@ -19,19 +19,11 @@ void ChatManager::initializeHandlers() {
 }
 
 void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
-    std::vector<UserSession*> sessionsSnapshot;
+    for (auto& [id, session] : sessions) {
+        if (!session) continue;
 
-    withSessionsLock([&sessionsSnapshot, &ignoreSession](auto& sessions) -> void {
-        for (auto& [id, session] : sessions) {
-            if (session.get() != &ignoreSession)
-                sessionsSnapshot.push_back(session.get());
-        }
-    });
-
-    for (const UserSession* session : sessionsSnapshot) {
-        // Avaliar a viabilidade de uma mensagem de log aqui
-        if (session != &ignoreSession)
-            session->send(msg);
+        if (session.get() != &ignoreSession)
+            session->send(msg); // Avaliar a viablidade de um log aqui depoise
     }
 }
 
@@ -62,9 +54,9 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
     }
 }
 
-void ChatManager::onConnectionCreated(std::unique_ptr<Connection> conn) {
+void ChatManager::onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) {
     ConnectionId id = nextConnectionId++;
-    conn->setId(id);
+    auto conn = std::make_unique<Connection>(id, clientSock, clientData, this);
 
     Connection* rawConn = conn.get();
 

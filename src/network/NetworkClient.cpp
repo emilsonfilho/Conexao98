@@ -34,7 +34,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         return;
     }
 
-    conn = new Connection(sock, address, this->listener);
+    this->conn = new Connection(0, sock, address, listener);
 
     std::thread listenerThread([this]() {
         this->conn->listen();

@@ -6,7 +6,7 @@
 #include "NetworkServer.h"
 
 
-NetworkServer::NetworkServer(ConnectionListener* listen): appListener(listen), isActive(false) {
+NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isActive(false) {
         this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
 
@@ -40,8 +40,6 @@ void NetworkServer::start(uint16_t port) {
                          << inet_ntoa(client.sin_addr)
                          << "\n";
 
-                auto newConn = std::make_unique<Connection>(clientSock, client, appListener);
-
-                appListener->onConnectionCreated(std::move(newConn));
+                appListener->onIncomingConnection(clientSock, client);
         }
 }

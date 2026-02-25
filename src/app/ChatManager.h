@@ -8,10 +8,11 @@
 #include "UserSession.h"
 
 #include "../network/ConnectionListener.h"
+#include "../network/ServerListener.h"
 #include "../protocol/MessageFactory.h"
 #include "handlers/MessageHandler.h"
 
-class ChatManager : public ConnectionListener {
+class ChatManager : public ConnectionListener, public ServerListener {
 private:
     ConnectionId nextConnectionId = 1;
     std::mutex sessionMutex;
@@ -31,7 +32,7 @@ public:
     void broadcast(Message* msg, const UserSession& ignoreSession);
 
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
-    void onConnectionCreated(std::unique_ptr<Connection> conn) override;
+    void onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
 };
 

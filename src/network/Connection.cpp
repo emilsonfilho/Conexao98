@@ -4,8 +4,8 @@
 #include <ws2tcpip.h>
 #include <stdexcept>
 
-Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
-id(0), socket(sock), address(addr), listener(listen), isActive(true) {}
+Connection::Connection(ConnectionId id, const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
+id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
         stop();
@@ -69,8 +69,4 @@ void Connection::stop() {
 
 ConnectionId Connection::getId() const {
         return id;
-}
-
-void Connection::setId(ConnectionId id) {
-        this->id = id;
 }

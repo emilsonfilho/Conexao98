@@ -2,6 +2,7 @@
 #define CONEXAO98_CHATMANAGER_H
 
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 
 #include "UserSession.h"
@@ -13,9 +14,16 @@
 class ChatManager : public ConnectionListener {
 private:
     ConnectionId nextConnectionId = 1;
-
+    std::mutex sessionMutex;
     std::unordered_map<ConnectionId, std::unique_ptr<UserSession>> sessions;
+
     std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
+
+    template <typename Func>
+    auto withSessionsLock(Func f) {
+        std::unique_lock<std::mutex> lock(sessionMutex);
+        return f(sessions);
+    }
 public:
     ChatManager() = default;
     void initializeHandlers();

@@ -19,9 +19,18 @@ void ChatManager::initializeHandlers() {
 }
 
 void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
-    for (auto& [user, session] : sessions) {
-        std::cout << "Avaliando " << session->getNickname() << '\n';
-        if (session.get() != &ignoreSession)
+    std::vector<UserSession*> sessionsSnapshot;
+
+    withSessionsLock([&sessionsSnapshot, &ignoreSession](auto& sessions) -> void {
+        for (auto& [id, session] : sessions) {
+            if (session.get() != &ignoreSession)
+                sessionsSnapshot.push_back(session.get());
+        }
+    });
+
+    for (const UserSession* session : sessionsSnapshot) {
+        // Avaliar a viabilidade de uma mensagem de log aqui
+        if (session != &ignoreSession)
             session->send(msg);
     }
 }
@@ -35,29 +44,43 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         return;
     }
 
-    UserSession& user = *sessions.at(conn.getId());
+    UserSession* user = nullptr;
 
-    if (auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
-        itHandler->second->handle(this, user, std::move(msg));
-    else
-        std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
+    withSessionsLock([&user, &conn](auto& sessions) -> void {
+        const auto it = sessions.find(conn.getId());
+        if (it == sessions.end())
+            return;
+
+        user = it->second.get();
+    });
+
+    if (user) {
+        if (const auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
+            itHandler->second->handle(this, *user, std::move(msg));
+        else
+            std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
+    }
 }
 
 void ChatManager::onConnectionCreated(std::unique_ptr<Connection> conn) {
     ConnectionId id = nextConnectionId++;
     conn->setId(id);
 
-    sessions.emplace(
-        id,
-        std::make_unique<UserSession>(std::move(conn))
-    );
-    conn->start();
+    Connection* rawConn = conn.get();
+
+    withSessionsLock([&id, &conn](auto& sessions) -> void {
+        sessions.emplace(
+            id,
+            std::make_unique<UserSession>(std::move(conn))
+        );
+    });
+
+    if (rawConn) rawConn->start();
 }
 
 void ChatManager::onDisconnected(Connection &conn) {
-    ConnectionId connId = conn.getId();
+    const ConnectionId connId = conn.getId();
 
-    const std::unique_ptr<UserSession> user = std::move(sessions.at(connId));
-
+    std::lock_guard<std::mutex> lock(sessionMutex);
     sessions.erase(connId);
 }

@@ -20,6 +20,10 @@ private:
     std::atomic<bool> isActive;
 public:
     Connection(SOCKET sock, sockaddr_in addr, ConnectionListener* listen);
+    Connection(const Connection&) = delete;
+    Connection& operator=(const Connection&) = delete;
+    Connection(Connection&&) = delete;
+    Connection& operator=(Connection&&) = delete;
     ~Connection();
 
     void start();

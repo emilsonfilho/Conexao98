@@ -14,7 +14,7 @@
 
 class ChatManager : public ConnectionListener, public ServerListener {
 private:
-    ConnectionId nextConnectionId = 1;
+    std::atomic<ConnectionId> nextConnectionId = 1;
     std::mutex sessionMutex;
     std::unordered_map<ConnectionId, std::unique_ptr<UserSession>> sessions;
 

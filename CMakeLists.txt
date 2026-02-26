@@ -27,7 +27,8 @@ add_executable(server server/main_server.cpp
         src/app/ChatManager.h
         src/app/UserSession.cpp
         src/app/UserSession.h
-        src/network/ServerListener.h) # adiciona um alvo
+        src/network/ServerListener.h
+        src/common/Types.h) # adiciona um alvo
 add_executable(client client/main_client.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
@@ -52,7 +53,8 @@ add_executable(client client/main_client.cpp
         src/app/handlers/ChatHandler.h
         src/protocol/MessageFactory.cpp
         src/protocol/MessageFactory.h
-        src/common/Types.h)
+        src/common/Types.h
+        src/network/ServerListener.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

@@ -19,12 +19,14 @@ void ChatManager::initializeHandlers() {
 }
 
 void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
-    for (auto& [id, session] : sessions) {
-        if (!session) continue;
+    withSessionsLock([&ignoreSession, &msg](auto& sessions) -> void {
+        for (auto& [id, session] : sessions) {
+            if (!session) continue;
 
-        if (session.get() != &ignoreSession)
-            session->send(msg); // Avaliar a viablidade de um log aqui depoise
-    }
+            if (session.get() != &ignoreSession)
+                session->send(msg); // Avaliar a viablidade de um log aqui depoise
+        }
+    });
 }
 
 void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {

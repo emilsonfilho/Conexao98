@@ -5,11 +5,7 @@
 #include "NetworkClient.h"
 #include "../common/ByteArray.h"
 
-NetworkClient::NetworkClient(ConnectionListener *listener): conn(nullptr), listener(listener), wsaData(WSAData()) {}
-
-NetworkClient::~NetworkClient() {
-    delete conn;
-}
+NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener), wsaData(WSAData()) {}
 
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -34,15 +30,18 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
         return;
     }
 
-    conn = new Connection(sock, address, this->listener);
-
-    std::thread listenerThread([this]() {
-        this->conn->listen();
-    });
-
-    listenerThread.detach();
+    clientConnection = std::make_unique<Connection>(0, sock, address, this);
+    clientConnection->start();
 }
 
 void NetworkClient::sendMessage(Message* msg) const {
-    conn->sendData(msg->serialize());
+    clientConnection->sendData(msg->serialize());
+}
+
+void NetworkClient::onMessageReceived(Connection &conn, const ByteArray &data) {
+    if (appListener) appListener->onMessageReceived(conn, data);
+}
+
+void NetworkClient::onDisconnected(Connection &conn) {
+    if (appListener) appListener->onDisconnected(conn);
 }

@@ -7,18 +7,20 @@
 #include "Connection.h"
 #include "../protocol/Message.h"
 
-class NetworkClient {
+class NetworkClient : public ConnectionListener {
 private:
-    Connection* conn;
-    ConnectionListener* listener;
+    std::unique_ptr<Connection> clientConnection;
+    ConnectionListener* appListener;
     WSADATA wsaData;
 public:
     explicit NetworkClient(ConnectionListener* listener);
-    ~NetworkClient();
 
     void connectToServer(const char* ip, uint16_t port);
 
     void sendMessage(Message* msg) const;
+
+    void onMessageReceived(Connection &conn, const ByteArray &data) override;
+    void onDisconnected(Connection &conn) override;
 };
 
 

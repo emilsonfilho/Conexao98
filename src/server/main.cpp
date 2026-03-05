@@ -1,27 +1,11 @@
-#include "../network/NetworkServer.h"
 #include <iostream>
 
-#include "../app/ChatManager.h"
+#include "Conexao98ServerApp.h"
 
 int main() {
-    // 1. Inicia o Winsock (Obrigatório no Windows)
-    WSADATA wsaData;
-
-
     try {
-        // 2. Cria o Listener de teste
-        ChatManager debugListener;
-        debugListener.initializeHandlers();
-
-        // 3. Cria o servidor passando o listener
-        // (Certifique-se que seu NetworkServer aceita o listener no construtor!)
-        NetworkServer server(&debugListener);
-
-        std::cout << "Iniciando servidor na porta 3000...\n";
-
-        // 4. Roda o servidor (vai travar aqui no loop)
-        server.start(3000);
-
+        if (Conexao98ServerApp app; app.init())
+            app.run();
     } catch (std::exception& e) {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }

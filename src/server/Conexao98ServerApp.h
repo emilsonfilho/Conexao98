@@ -4,17 +4,17 @@
 #include "../app/ChatManager.h"
 #include "../network/NetworkServer.h"
 
-class Server98ClientApp {
+class Conexao98ServerApp {
 private:
     std::unique_ptr<ChatManager> chatManager;
     std::unique_ptr<NetworkServer> server;
 public:
-    Server98ClientApp();
-    ~Server98ClientApp();
+    Conexao98ServerApp();
+    ~Conexao98ServerApp();
 
     bool init();
-    void run();
-    void stop();
+    void run() const;
+    void stop() const;
 };
 
 

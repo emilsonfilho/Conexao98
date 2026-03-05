@@ -16,6 +16,7 @@ public:
     explicit NetworkServer(ServerListener* listen);
 
     void start(uint16_t port);
+    void shutdown();
 };
 
 

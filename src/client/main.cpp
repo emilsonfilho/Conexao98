@@ -1,11 +1,10 @@
-#include <algorithm>
 #include <iostream>
-#include <thread> // Para pausas se necessário
-#include "../src/network/NetworkClient.h"
-#include "../src/network/ConnectionListener.h"
-#include "../src/protocol/messages/ChatMessage.h"
-#include "../src/protocol/messages/JoinMessage.h"
-#include "../src/protocol/MessageFactory.h"
+
+#include "../network/NetworkClient.h"
+#include "../network/ConnectionListener.h"
+#include "../protocol/messages/ChatMessage.h"
+#include "../protocol/messages/JoinMessage.h"
+#include "../protocol/MessageFactory.h"
 
 // 1. Implementação vazia apenas para satisfazer o construtor do NetworkClient
 class ClientListener : public ConnectionListener {

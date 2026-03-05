@@ -4,7 +4,7 @@ project(Conexao98) # required
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(server server/main_server.cpp
+add_executable(server src/server/main.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
         src/protocol/Message.h
@@ -28,8 +28,9 @@ add_executable(server server/main_server.cpp
         src/app/UserSession.cpp
         src/app/UserSession.h
         src/network/ServerListener.h
-        src/common/Types.h) # adiciona um alvo
-add_executable(client client/main_client.cpp
+        src/common/Types.h
+        src/server/main.cpp) # adiciona um alvo
+add_executable(client src/client/main.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
         src/protocol/Message.h
@@ -54,7 +55,8 @@ add_executable(client client/main_client.cpp
         src/protocol/MessageFactory.cpp
         src/protocol/MessageFactory.h
         src/common/Types.h
-        src/network/ServerListener.h)
+        src/network/ServerListener.h
+        src/client/main.cpp)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

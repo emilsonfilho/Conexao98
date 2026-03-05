@@ -1,8 +1,7 @@
-#include "../src/network/NetworkServer.h"
 #include <iostream>
 
-#include "../src/app/ChatManager.h"
-#include "../src/network/ConnectionListener.h"
+#include "../network/NetworkServer.h"
+#include "../app/ChatManager.h"
 
 int main() {
     // 1. Inicia o Winsock (Obrigatório no Windows)

@@ -6,10 +6,7 @@
 int main() {
     // 1. Inicia o Winsock (Obrigatório no Windows)
     WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cerr << "Falha no WSAStartup\n";
-        return 1;
-    }
+
 
     try {
         // 2. Cria o Listener de teste

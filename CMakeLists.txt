@@ -54,7 +54,9 @@ add_executable(client src/client/main.cpp
         src/protocol/MessageFactory.cpp
         src/protocol/MessageFactory.h
         src/common/Types.h
-        src/network/ServerListener.h)
+        src/network/ServerListener.h
+        src/client/Server98ClientApp.cpp
+        src/client/Server98ClientApp.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

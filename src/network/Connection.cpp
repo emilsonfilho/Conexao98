@@ -4,8 +4,25 @@
 #include <ws2tcpip.h>
 #include <stdexcept>
 
-Connection::Connection(const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
-socket(sock), address(addr), listener(listen), isRunning(true) {}
+Connection::Connection(ConnectionId id, const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
+id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
+
+Connection::~Connection() {
+        stop();
+
+        if (listenerThread.joinable()) {
+                if (listenerThread.get_id() == std::this_thread::get_id())
+                        listenerThread.detach();
+                else
+                        listenerThread.join();
+        }
+}
+
+void Connection::start() {
+        listenerThread = std::thread([this]() {
+                this->listen();
+        });
+}
 
 std::string Connection::getSenderId() const {
         char* ip = inet_ntoa(address.sin_addr);
@@ -28,25 +45,28 @@ void Connection::sendData(const ByteArray& data) const {
 void Connection::listen() {
         char buff[1025];
 
-        while (isRunning) {
-                const int iResult = recv(socket, buff, 1024, 0);
-
-                if (iResult > 0) {
+        while (isActive) {
+                if (const int iResult = recv(socket, buff, 1024, 0); iResult > 0) {
                         ByteArray data;
                         data.write(buff, iResult);
-                        listener->onMessageReceived(*this, data);
-                } else if (iResult == 0) {
-                        listener->onDisconnected(*this);
-                        break;
+                        if (listener) listener->onMessageReceived(*this, data);
                 } else {
-                        listener->onDisconnected(*this);
-                        break;
+                        if (listener) listener->onDisconnected(*this);
+                        return;
                 }
         }
-
-        closesocket(socket);
 }
 
 void Connection::stop() {
-        isRunning = false;
+        isActive = false;
+
+        if (socket != INVALID_SOCKET) {
+                shutdown(socket, SD_BOTH);
+                closesocket(socket);
+                socket = INVALID_SOCKET;
+        }
+}
+
+ConnectionId Connection::getId() const {
+        return id;
 }

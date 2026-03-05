@@ -3,18 +3,17 @@
 
 #include <winsock2.h>
 #include <atomic>
-#include <vector>
 
-#include "ConnectionListener.h"
 #include "Connection.h"
+#include "ServerListener.h"
 
 class NetworkServer {
 private:
     SOCKET sock;
-    ConnectionListener* appListener;
+    ServerListener* appListener;
     std::atomic<bool> isActive;
 public:
-    NetworkServer(ConnectionListener* listen);
+    explicit NetworkServer(ServerListener* listen);
 
     void start(uint16_t port);
 };

@@ -24,10 +24,6 @@ public:
         }
     }
 
-    void onConnectionCreated(Connection *conn) override {
-        std::cout << "[CLIENT] Conexao98!\n";
-    }
-
     void onDisconnected(Connection& conn) override {
         std::cout << "[CLIENT] Desconectado do servidor.\n";
     }

@@ -35,6 +35,11 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
 }
 
 void NetworkClient::sendMessage(Message* msg) const {
+    if (!clientConnection) {
+        std::cerr << "Cannot send message: no active client connection.\n";
+        return;
+    }
+
     clientConnection->sendData(msg->serialize());
 }
 

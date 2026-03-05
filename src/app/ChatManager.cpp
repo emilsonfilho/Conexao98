@@ -19,11 +19,14 @@ void ChatManager::initializeHandlers() {
 }
 
 void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
-    for (auto& [user, session] : sessions) {
-        std::cout << "Avaliando " << session->getNickname() << '\n';
-        if (session.get() != &ignoreSession)
-            session->send(msg);
-    }
+    withSessionsLock([&ignoreSession, &msg](auto& sessions) -> void {
+        for (auto& [id, session] : sessions) {
+            if (!session) continue;
+
+            if (session.get() != &ignoreSession)
+                session->send(msg); // Avaliar a viablidade de um log aqui depoise
+        }
+    });
 }
 
 void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
@@ -35,23 +38,43 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         return;
     }
 
-    UserSession& user = *sessions.at(&conn);
+    UserSession* user = nullptr;
 
-    if (auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
-        itHandler->second->handle(this, user, std::move(msg));
-    else
-        std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
+    withSessionsLock([&user, &conn](auto& sessions) -> void {
+        const auto it = sessions.find(conn.getId());
+        if (it == sessions.end())
+            return;
+
+        user = it->second.get();
+    });
+
+    if (user) {
+        if (const auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
+            itHandler->second->handle(this, *user, std::move(msg));
+        else
+            std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
+    }
 }
 
-void ChatManager::onConnectionCreated(Connection *conn) {
-    sessions.emplace(
-        conn,
-        std::make_unique<UserSession>(conn)
-    );
+void ChatManager::onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) {
+    ConnectionId id = nextConnectionId++;
+    auto conn = std::make_unique<Connection>(id, clientSock, clientData, this);
+
+    Connection* rawConn = conn.get();
+
+    withSessionsLock([&id, &conn](auto& sessions) -> void {
+        sessions.emplace(
+            id,
+            std::make_unique<UserSession>(std::move(conn))
+        );
+    });
+
+    if (rawConn) rawConn->start();
 }
 
 void ChatManager::onDisconnected(Connection &conn) {
-    const std::unique_ptr<UserSession> user = std::move(sessions.at(&conn));
+    const ConnectionId connId = conn.getId();
 
-    sessions.erase(&conn);
+    std::lock_guard<std::mutex> lock(sessionMutex);
+    sessions.erase(connId);
 }

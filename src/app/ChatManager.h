@@ -2,18 +2,29 @@
 #define CONEXAO98_CHATMANAGER_H
 
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 
 #include "UserSession.h"
 
 #include "../network/ConnectionListener.h"
+#include "../network/ServerListener.h"
 #include "../protocol/MessageFactory.h"
 #include "handlers/MessageHandler.h"
 
-class ChatManager : public ConnectionListener {
+class ChatManager : public ConnectionListener, public ServerListener {
 private:
-    std::unordered_map<Connection*, std::unique_ptr<UserSession>> sessions;
+    std::atomic<ConnectionId> nextConnectionId = 1;
+    std::mutex sessionMutex;
+    std::unordered_map<ConnectionId, std::unique_ptr<UserSession>> sessions;
+
     std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
+
+    template <typename Func>
+    auto withSessionsLock(Func f) {
+        std::unique_lock<std::mutex> lock(sessionMutex);
+        return f(sessions);
+    }
 public:
     ChatManager() = default;
     void initializeHandlers();
@@ -21,7 +32,7 @@ public:
     void broadcast(Message* msg, const UserSession& ignoreSession);
 
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
-    void onConnectionCreated(Connection *conn) override;
+    void onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
 };
 

@@ -13,6 +13,7 @@ private:
     bool isActive;
 public:
     Conexao98ClientApp();
+    ~Conexao98ClientApp();
 
     bool init();
     void run();

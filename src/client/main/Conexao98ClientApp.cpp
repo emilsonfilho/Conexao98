@@ -10,6 +10,10 @@ Conexao98ClientApp::Conexao98ClientApp() {
     isActive = false;
 }
 
+Conexao98ClientApp::~Conexao98ClientApp() {
+    WSACleanup();
+}
+
 bool Conexao98ClientApp::init() {
     try {
         WSADATA wsaData;

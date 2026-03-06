@@ -43,8 +43,10 @@ void Conexao98ClientApp::run() {
     while (isActive) {
         std::getline(std::cin, inputText);
 
-        if (inputText == "sair")
+        if (inputText == "sair") {
             stop();
+            break;
+        }
 
         ChatMessage text(inputText);
         client->sendMessage(&text);

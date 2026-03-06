@@ -5,6 +5,7 @@
 
 
 class ChatPrinter : public IMessagePrinter {
+public:
     void handle(Message *msg) override;
 };
 

@@ -1,5 +1,5 @@
-#ifndef CONEXAO98_SERVER98CLIENTAPP_H
-#define CONEXAO98_SERVER98CLIENTAPP_H
+#ifndef CONEXAO98_SERVER98SERVERAPP_H
+#define CONEXAO98_SERVER98SERVERAPP_H
 
 #include "../app/ChatManager.h"
 #include "../network/NetworkServer.h"
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //CONEXAO98_SERVER98CLIENTAPP_H
+#endif //CONEXAO98_SERVER98SERVERAPP_H

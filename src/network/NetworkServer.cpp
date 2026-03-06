@@ -31,8 +31,12 @@ void NetworkServer::start(uint16_t port) {
 
                 const SOCKET clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
                 if (clientSock == SOCKET_ERROR) {
-                        closesocket(sock);
-                        std::cerr << "Failed to accept connection from client. Erro: " << WSAGetLastError() << "\n";
+                        if (!isActive) {
+                                std::cout << "Servidor desligado com sucesso.\n";
+                                break;
+                        }
+
+                        std::cerr << "Falha ao aceitar cliente. Ignorando... Erro: " << WSAGetLastError() << "\n";
                         continue;
                 }
 
@@ -41,5 +45,14 @@ void NetworkServer::start(uint16_t port) {
                          << "\n";
 
                 appListener->onIncomingConnection(clientSock, client);
+        }
+}
+
+void NetworkServer::shutdown() {
+        isActive = false;
+
+        if (sock != INVALID_SOCKET) {
+                closesocket(sock);
+                sock = INVALID_SOCKET;
         }
 }

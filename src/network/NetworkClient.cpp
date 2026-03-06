@@ -1,23 +1,16 @@
 #include <ws2tcpip.h>
-#include <thread>
 #include <iostream>
+#include <stdexcept>
 
 #include "NetworkClient.h"
 #include "../common/ByteArray.h"
 
-NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener), wsaData(WSAData()) {}
+NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener), wsaData(WSADATA{}) {}
 
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cout << "WSAStartup() failed \n";
-        return;
-    }
-
     SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sock == INVALID_SOCKET) {
-        std::cout << "Error creating socket.\n";
-        return;
-    }
+    if (sock == INVALID_SOCKET)
+        throw std::runtime_error("Failed to create TCP client socket.");
 
     sockaddr_in address{};
     address.sin_family = AF_INET;
@@ -25,9 +18,8 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     inet_pton(AF_INET, ip, &address.sin_addr);
 
     if (connect(sock, reinterpret_cast<sockaddr *>(&address), sizeof(address)) == SOCKET_ERROR) {
-        std::cerr << "Error connecting to server.\n";
         closesocket(sock);
-        return;
+        throw std::runtime_error( "Failed to connect to server.");
     }
 
     clientConnection = std::make_unique<Connection>(0, sock, address, this);

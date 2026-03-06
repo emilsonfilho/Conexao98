@@ -4,7 +4,7 @@ project(Conexao98) # required
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(server server/main_server.cpp
+add_executable(server src/server/main.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
         src/protocol/Message.h
@@ -28,8 +28,11 @@ add_executable(server server/main_server.cpp
         src/app/UserSession.cpp
         src/app/UserSession.h
         src/network/ServerListener.h
-        src/common/Types.h) # adiciona um alvo
-add_executable(client client/main_client.cpp
+        src/common/Types.h
+        src/server/Conexao98ServerApp.cpp
+        src/server/Conexao98ServerApp.h
+)
+add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
         src/network/ConnectionListener.h
         src/protocol/Message.h
@@ -54,7 +57,16 @@ add_executable(client client/main_client.cpp
         src/protocol/MessageFactory.cpp
         src/protocol/MessageFactory.h
         src/common/Types.h
-        src/network/ServerListener.h)
+        src/network/ServerListener.h
+        src/client/main/Conexao98ClientApp.cpp
+        src/client/main/Conexao98ClientApp.h
+        src/client/ConsoleChatListener.cpp
+        src/client/ConsoleChatListener.h
+        src/client/printers/IMessagePrinter.h
+        src/client/printers/ChatPrinter.cpp
+        src/client/printers/ChatPrinter.h
+        src/client/printers/JoinPrinter.cpp
+        src/client/printers/JoinPrinter.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

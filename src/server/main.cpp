@@ -10,7 +10,6 @@ int main() {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }
 
-    WSACleanup();
     return 0;
 }
 

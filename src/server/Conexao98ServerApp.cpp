@@ -37,5 +37,5 @@ void Conexao98ServerApp::run() const {
 }
 
 void Conexao98ServerApp::stop() const {
-    server->shutdown();
+    if (server) server->shutdown();
 }

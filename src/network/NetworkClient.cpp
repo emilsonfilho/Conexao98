@@ -1,6 +1,6 @@
 #include <ws2tcpip.h>
-#include <thread>
 #include <iostream>
+#include <stdexcept>
 
 #include "NetworkClient.h"
 #include "../common/ByteArray.h"

@@ -7,7 +7,7 @@
 #include "IMessagePrinter.h"
 
 
-class JoinPrinter : public ImessagePrinter {
+class JoinPrinter : public IMessagePrinter {
 public:
     void handle(Message *msg) override;
 };

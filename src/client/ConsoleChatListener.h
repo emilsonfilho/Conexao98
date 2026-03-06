@@ -13,7 +13,7 @@
 
 class ConsoleChatListener : public ConnectionListener {
 private:
-    std::unordered_map<MessageType, std::unique_ptr<ImessagePrinter>> printers;
+    std::unordered_map<MessageType, std::unique_ptr<IMessagePrinter>> printers;
 public:
     ConsoleChatListener();
 

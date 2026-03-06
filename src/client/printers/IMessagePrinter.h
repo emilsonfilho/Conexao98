@@ -3,9 +3,9 @@
 
 #include "../../protocol/Message.h"
 
-class ImessagePrinter {
+class IMessagePrinter {
 public:
-    virtual ~ImessagePrinter() = default;
+    virtual ~IMessagePrinter() = default;
 
     virtual void handle(Message* msg) = 0;
 };

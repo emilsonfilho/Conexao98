@@ -4,7 +4,7 @@
 #include "IMessagePrinter.h"
 
 
-class ChatPrinter : public ImessagePrinter {
+class ChatPrinter : public IMessagePrinter {
     void handle(Message *msg) override;
 };
 

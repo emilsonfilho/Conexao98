@@ -6,8 +6,8 @@
 Conexao98ServerApp::Conexao98ServerApp() = default;
 
 Conexao98ServerApp::~Conexao98ServerApp() {
+    if (isWsaInitialized) WSACleanup();
     std::cout << "[APP] Desligando subsistema de rede do Windows...\n";
-    WSACleanup();
 }
 
 bool Conexao98ServerApp::init() {
@@ -18,6 +18,8 @@ bool Conexao98ServerApp::init() {
         std::cerr << "Falha no WSAStartup\n";
         return false;
     }
+
+    isWsaInitialized = true;
 
     chatManager = std::make_unique<ChatManager>();
     chatManager->initializeHandlers();

@@ -11,7 +11,7 @@ Conexao98ClientApp::Conexao98ClientApp() {
 }
 
 Conexao98ClientApp::~Conexao98ClientApp() {
-    WSACleanup();
+    if (isWsaInitialized) WSACleanup();
 }
 
 bool Conexao98ClientApp::init() {
@@ -20,6 +20,8 @@ bool Conexao98ClientApp::init() {
 
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
             throw std::runtime_error("Network initialization failed (WSAStartup).");
+
+        isWsaInitialized = true;
 
         client->connectToServer("127.0.0.1", 3000);
 

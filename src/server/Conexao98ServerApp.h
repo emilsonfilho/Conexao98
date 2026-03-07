@@ -14,7 +14,7 @@ public:
     Conexao98ServerApp();
     ~Conexao98ServerApp();
 
-    bool init();
+    void init();
     void run() const;
     void stop() const;
 };

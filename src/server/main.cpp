@@ -4,8 +4,10 @@
 
 int main() {
     try {
-        if (Conexao98ServerApp app; app.init())
-            app.run();
+        Conexao98ServerApp app;
+        app.init();
+
+        app.run();
     } catch (std::exception& e) {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }

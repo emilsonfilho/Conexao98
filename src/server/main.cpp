@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Conexao98ServerApp.h"
+#include "../common/exceptions/Conexao98Exception.h"
 
 int main() {
     try {
@@ -8,7 +9,7 @@ int main() {
         app.init();
 
         app.run();
-    } catch (std::exception& e) {
+    } catch (Conexao98Exception& e) {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }
 

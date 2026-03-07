@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-class Conexao98Exception : std::runtime_error {
+class Conexao98Exception : public std::runtime_error {
 public:
     explicit Conexao98Exception(const std::string& msg) : runtime_error(msg) {}
 };

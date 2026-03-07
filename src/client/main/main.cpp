@@ -7,7 +7,7 @@ int main() {
     try {
         if (auto app = Conexao98ClientApp(); app.init())
             app.run();
-    } catch (Conexao98Exception& e) {
+    } catch (const Conexao98Exception& e) {
         std::cerr << "[CLIENT]: " << e.what() << "\n";
     }
 

@@ -5,6 +5,8 @@
 
 #include "NetworkServer.h"
 
+#include "../common/exceptions/NetworkException.h"
+
 
 NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isActive(false) {
         this->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -18,7 +20,7 @@ void NetworkServer::start(uint16_t port) {
 
         if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERROR) {
                 closesocket(sock);
-                throw std::runtime_error("Falha ao startar o servidor. Codigo de erro: " + std::to_string(WSAGetLastError()) + ".\n");
+                throw NetworkException("Falha ao startar o servidor. Codigo de erro: " + std::to_string(WSAGetLastError()) + ".\n");
         }
 
         listen(sock, 5);

@@ -31,6 +31,7 @@ add_executable(server src/server/main.cpp
         src/common/Types.h
         src/server/Conexao98ServerApp.cpp
         src/server/Conexao98ServerApp.h
+        src/common/exceptions/Conexao98Exception.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -66,7 +67,8 @@ add_executable(client src/client/main/main.cpp
         src/client/printers/ChatPrinter.cpp
         src/client/printers/ChatPrinter.h
         src/client/printers/JoinPrinter.cpp
-        src/client/printers/JoinPrinter.h)
+        src/client/printers/JoinPrinter.h
+        src/common/exceptions/Conexao98Exception.h)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

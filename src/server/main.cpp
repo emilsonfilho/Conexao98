@@ -1,12 +1,15 @@
 #include <iostream>
 
 #include "Conexao98ServerApp.h"
+#include "../common/exceptions/Conexao98Exception.h"
 
 int main() {
     try {
-        if (Conexao98ServerApp app; app.init())
-            app.run();
-    } catch (std::exception& e) {
+        Conexao98ServerApp app;
+        app.init();
+
+        app.run();
+    } catch (Conexao98Exception& e) {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }
 

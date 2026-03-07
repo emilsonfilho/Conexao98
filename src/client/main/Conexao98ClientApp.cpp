@@ -1,6 +1,7 @@
 #include "Conexao98ClientApp.h"
 
 #include "../ConsoleChatListener.h"
+#include "../../common/exceptions/SystemException.h"
 #include "../../protocol/messages/ChatMessage.h"
 #include "../../protocol/messages/JoinMessage.h"
 
@@ -19,7 +20,7 @@ bool Conexao98ClientApp::init() {
         WSADATA wsaData;
 
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-            throw std::runtime_error("Network initialization failed (WSAStartup).");
+            throw SystemException("Network initialization failed (WSAStartup).");
 
         isWsaInitialized = true;
 

@@ -9,7 +9,7 @@
 // Logic errors and packets
 class ProtocolException : public Conexao98Exception {
 public:
-    explicit ProtocolException(const char * message) : Conexao98Exception(message) {}
+    explicit ProtocolException(const std::string& message) : Conexao98Exception(message) {}
 };
 
 #endif //CONEXAO98_PROTOCOLEXCEPTION_H

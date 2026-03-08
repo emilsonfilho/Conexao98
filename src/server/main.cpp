@@ -9,7 +9,7 @@ int main() {
         app.init();
 
         app.run();
-    } catch (Conexao98Exception& e) {
+    } catch (const Conexao98Exception& e) {
         std::cerr << "ERRO FATAL: " << e.what() << "\n";
     }
 

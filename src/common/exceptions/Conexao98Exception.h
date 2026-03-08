@@ -9,7 +9,7 @@
 
 class Conexao98Exception : public std::runtime_error {
 public:
-    explicit Conexao98Exception(const std::string& msg) : runtime_error(msg) {}
+    explicit Conexao98Exception(const std::string& msg) : std::runtime_error(msg) {}
 };
 
 #endif //CONEXAO98_CONEXAO98EXCEPTION_H

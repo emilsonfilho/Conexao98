@@ -35,6 +35,8 @@ add_executable(server src/server/main.cpp
         src/common/exceptions/SystemException.h
         src/common/exceptions/NetworkException.h
         src/common/exceptions/ProtocolException.h
+        src/app/ConnectionReaper.cpp
+        src/app/ConnectionReaper.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -74,7 +76,10 @@ add_executable(client src/client/main/main.cpp
         src/common/exceptions/Conexao98Exception.h
         src/common/exceptions/SystemException.h
         src/common/exceptions/NetworkException.h
-        src/common/exceptions/ProtocolException.h)
+        src/common/exceptions/ProtocolException.h
+        src/app/ConnectionReaper.cpp
+        src/app/ConnectionReaper.h
+)
 
 if (WIN32)
     target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado

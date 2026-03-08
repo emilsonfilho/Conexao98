@@ -11,11 +11,13 @@ class UserSession {
 private:
     std::unique_ptr<Connection> conn;
     std::string nickname;
+    std::atomic<bool> isActive;
 public:
     explicit UserSession(std::unique_ptr<Connection> conn);
 
     void setNickname(const std::string& nick);
     std::string getNickname() const;
+    bool isAlive() const;
 
     Connection& getConnection() const;
 

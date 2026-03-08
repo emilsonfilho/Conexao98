@@ -14,10 +14,6 @@ Connection& UserSession::getConnection() const {
     return *conn;
 }
 
-bool UserSession::isAlive() const {
-    return conn != nullptr;
-}
-
 void UserSession::send(Message *msg) const {
     conn->sendData(msg->serialize());
 }

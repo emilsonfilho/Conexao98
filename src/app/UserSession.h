@@ -16,7 +16,6 @@ public:
 
     void setNickname(const std::string& nick);
     std::string getNickname() const;
-    bool isAlive() const;
 
     Connection& getConnection() const;
 

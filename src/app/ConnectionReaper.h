@@ -20,13 +20,13 @@ private:
     std::mutex queueMutex;
     std::condition_variable queueCondition;
     std::atomic<bool> isServerActive;
+
+    void cleanupLoop();
 public:
     ConnectionReaper();
     ~ConnectionReaper();
 
     void moveToGraveyard(std::unique_ptr<UserSession> deadSession);
-
-    void cleanupLoop();
 };
 
 

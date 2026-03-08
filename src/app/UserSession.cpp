@@ -15,7 +15,7 @@ Connection& UserSession::getConnection() const {
 }
 
 bool UserSession::isAlive() const {
-    return isActive;
+    return conn != nullptr;
 }
 
 void UserSession::send(Message *msg) const {

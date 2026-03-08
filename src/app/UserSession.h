@@ -11,7 +11,6 @@ class UserSession {
 private:
     std::unique_ptr<Connection> conn;
     std::string nickname;
-    std::atomic<bool> isActive;
 public:
     explicit UserSession(std::unique_ptr<Connection> conn);
 

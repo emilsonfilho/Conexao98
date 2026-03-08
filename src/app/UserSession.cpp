@@ -1,6 +1,6 @@
 #include "UserSession.h"
 
-UserSession::UserSession(std::unique_ptr<Connection> conn) : conn(std::move(conn)), isActive(true) {}
+UserSession::UserSession(std::unique_ptr<Connection> conn) : conn(std::move(conn)) {}
 
 void UserSession::setNickname(const std::string& nick) {
     nickname = nick;

@@ -17,6 +17,7 @@ ConnectionReaper::ConnectionReaper() {
 
 ConnectionReaper::~ConnectionReaper() {
     isServerActive = false;
+    queueCondition.notify_all();
     cleanupThread.join();
 }
 
@@ -26,11 +27,12 @@ void ConnectionReaper::moveToGraveyard(std::unique_ptr<UserSession> deadSession)
 
 void ConnectionReaper::cleanupLoop() {
     while (isServerActive) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::unique_lock<std::mutex> lock(queueMutex);
+        queueCondition.wait_for(lock, std::chrono::seconds(1), [&]() -> bool {
+            return !cleanupQueue.empty() || !isServerActive;
+        });
 
-        std::lock_guard<std::mutex> lock(queueMutex);
-
-        if (!cleanupQueue.empty()) {
+        while (!cleanupQueue.empty()) {
             std::unique_ptr<UserSession> session = std::move(cleanupQueue.front());
             cleanupQueue.pop();
 

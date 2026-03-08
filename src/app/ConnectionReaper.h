@@ -5,6 +5,7 @@
 #ifndef CONEXAO98_CONNECTIONREAPER_H
 #define CONEXAO98_CONNECTIONREAPER_H
 
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -17,6 +18,7 @@ private:
     std::queue<std::unique_ptr<UserSession>> cleanupQueue;
     std::thread cleanupThread;
     std::mutex queueMutex;
+    std::condition_variable queueCondition;
     std::atomic<bool> isServerActive;
 public:
     ConnectionReaper();

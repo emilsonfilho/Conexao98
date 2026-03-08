@@ -25,6 +25,7 @@ ConnectionReaper::~ConnectionReaper() {
 void ConnectionReaper::moveToGraveyard(std::unique_ptr<UserSession> deadSession) {
     std::lock_guard<std::mutex> lock(queueMutex);
     cleanupQueue.push(std::move(deadSession));
+    queueCondition.notify_one();
 }
 
 void ConnectionReaper::cleanupLoop() {

@@ -9,7 +9,7 @@ id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
         stop();
-        listenerThread.join();
+        if (listenerThread.joinable()) listenerThread.join();
 }
 
 void Connection::start() {

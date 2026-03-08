@@ -14,9 +14,9 @@ Este projeto está em evolução constante. Aqui estão os próximos passos arqu
 
 - [x] **Limpeza de Memória:** Migrar ponteiros crus para _smart pointers_ para eliminar _memory leaks_. [Ver Issue #1](https://github.com/emilsonfilho/Conexao98/issues/1)
 - [ ] **Multiplataforma:** Abstrair a camada de sockets (atualmente usando Winsock2) para garantir que o código compile nativamente tanto no Windows quanto Linux.
-- [ ] **Thread Safety (Mutex):** Implementar _mutex_ para proteger estruturas de dados compartilhadas contra acesso indevido da sessão crítica.
+- [x] **Thread Safety (Mutex):** Implementar _mutex_ para proteger estruturas de dados compartilhadas contra acesso indevido da sessão crítica.
 - [x] **Thread Safety (Lock Guard):** Refatorar os bloqueios manuais aplicando para garantir o *unlock* automático e prevenir *deadlocks* no servidor.
-- [ ] **Desconexão Graciosa:** Desenvolver um mecanismo para capturar quedas de conexão ou retornos vazios do *socket*, limpando a sessão com segurança e enviando um *broadcast* de saída para a sala.
+- [x] **Desconexão Graciosa:** Desenvolver um mecanismo para capturar quedas de conexão ou retornos vazios do *socket*, limpando a sessão com segurança e enviando um *broadcast* de saída para a sala.
 - [ ] **Interface de Usuário (TUI/GUI):** Substituir o console puro por uma interface robusta para o cliente.
 - [ ] **Segurança:** Implementar criptografia ponta-a-ponta e Handshake seguro na conexão inicial.
 

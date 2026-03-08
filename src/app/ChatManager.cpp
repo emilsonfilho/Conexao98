@@ -76,5 +76,9 @@ void ChatManager::onDisconnected(Connection &conn) {
     const ConnectionId connId = conn.getId();
 
     std::lock_guard<std::mutex> lock(sessionMutex);
-    sessions.erase(connId);
+
+    if (const auto it = sessions.find(connId); it != sessions.end()) {
+        reaper.moveToGraveyard(std::move(it->second));
+        sessions.erase(it);
+    }
 }

@@ -9,13 +9,7 @@ id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
         stop();
-
-        if (listenerThread.joinable()) {
-                if (listenerThread.get_id() == std::this_thread::get_id())
-                        listenerThread.detach();
-                else
-                        listenerThread.join();
-        }
+        if (listenerThread.joinable()) listenerThread.join();
 }
 
 void Connection::start() {

@@ -5,6 +5,7 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "ConnectionReaper.h"
 #include "UserSession.h"
 
 #include "../network/ConnectionListener.h"
@@ -19,6 +20,8 @@ private:
     std::unordered_map<ConnectionId, std::unique_ptr<UserSession>> sessions;
 
     std::unordered_map<MessageType, std::unique_ptr<MessageHandler>> messageHandlers;
+
+    ConnectionReaper reaper = ConnectionReaper();
 
     template <typename Func>
     auto withSessionsLock(Func f) {

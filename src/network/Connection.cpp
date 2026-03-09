@@ -6,7 +6,7 @@
 
 #include "../common/platform/SocketHelper.h"
 
-Connection::Connection(ConnectionId id, const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
+Connection::Connection(ConnectionId id, const Socket sock, const sockaddr_in addr, ConnectionListener* listen):
 id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {

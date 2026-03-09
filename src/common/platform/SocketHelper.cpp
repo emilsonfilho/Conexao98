@@ -11,8 +11,8 @@ bool SocketHelper::initSystem() {
         if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
             return false;
 
-        return true;
     #endif
+    return true;
 }
 
 void SocketHelper::cleanupSystem() {

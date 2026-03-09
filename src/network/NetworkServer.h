@@ -1,11 +1,11 @@
 #ifndef CONEXAO98_NETWORKSERVER_H
 #define CONEXAO98_NETWORKSERVER_H
 
-#include <winsock2.h>
 #include <atomic>
 
 #include "Connection.h"
 #include "ServerListener.h"
+#include "../common/platform/SocketHelper.h"
 
 class NetworkServer {
 private:

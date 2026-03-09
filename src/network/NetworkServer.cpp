@@ -1,12 +1,10 @@
 #include <ws2tcpip.h>
 #include <memory>
-#include <stdexcept>
 #include <iostream>
 
 #include "NetworkServer.h"
 
 #include "../common/exceptions/NetworkException.h"
-#include "../common/platform/SocketHelper.h"
 
 
 NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isActive(false) {

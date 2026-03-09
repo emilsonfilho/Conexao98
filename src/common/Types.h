@@ -3,9 +3,13 @@
 
 #include <cstdint>
 
+#ifdef _WIN32
+    #include <winsock2.h>
+#endif
+
 using ConnectionId = uint64_t;
 
-#ifndef _WIN32
+#ifdef _WIN32
     using Socket = SOCKET;
 #else
     using Socket = int;

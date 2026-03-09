@@ -4,6 +4,7 @@
 
 #ifndef CONEXAO98_SOCKETHELPER_H
 #define CONEXAO98_SOCKETHELPER_H
+
 #include "../Types.h"
 
 #ifdef _WIN32

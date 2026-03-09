@@ -22,7 +22,7 @@ void SocketHelper::cleanupSystem() {
 }
 
 void SocketHelper::closeSocket(Socket sock) {
-    #ifndef _WIN32
+    #ifdef _WIN32
         closesocket(sock);
     #elif __linux__
         close(sock);
@@ -30,7 +30,7 @@ void SocketHelper::closeSocket(Socket sock) {
 }
 
 int SocketHelper::getLastError() {
-    #ifndef _WIN32
+    #ifdef _WIN32
         return WSAGetLastError();
     #else
         return errno;

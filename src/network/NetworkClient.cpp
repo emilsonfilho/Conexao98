@@ -1,6 +1,5 @@
 #include <ws2tcpip.h>
 #include <iostream>
-#include <stdexcept>
 
 #include "NetworkClient.h"
 #include "../common/ByteArray.h"
@@ -11,7 +10,7 @@ NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nul
 
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sock == INVALID_SOCKET)
+    if (sock == INVALID_SOCKET_FD)
         throw NetworkException("Failed to create TCP client socket.");
 
     sockaddr_in address{};
@@ -19,7 +18,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     address.sin_port = htons(port);
     inet_pton(AF_INET, ip, &address.sin_addr);
 
-    if (connect(sock, reinterpret_cast<sockaddr *>(&address), sizeof(address)) == SOCKET_ERROR) {
+    if (connect(sock, reinterpret_cast<sockaddr *>(&address), sizeof(address)) == SOCKET_ERR) {
         SocketHelper::closeSocket(sock);
         throw NetworkException( "Failed to connect to server.");
     }

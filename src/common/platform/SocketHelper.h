@@ -9,6 +9,7 @@
 
 #ifdef _WIN32
     #include <winsock2.h>
+    #include <ws2tcpip.h>
 #elif (__linux__)
     #include <sys/socket.h>
     #include <unistd.h>
@@ -21,8 +22,11 @@ public:
 
     static bool initSystem();
     static void cleanupSystem();
+    static void shutdownSystem(Socket sock);
     static void closeSocket(Socket sock);
     static int getLastError();
+    static char* inetToAddress(sockaddr_in address);
+    static u_long networkToHost(sockaddr_in address);
 };
 
 

@@ -17,7 +17,7 @@ void NetworkServer::start(uint16_t port) {
         addr.sin_port = htons(port);
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-        if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERROR) {
+        if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERR) {
                 SocketHelper::closeSocket(sock);
                 throw NetworkException("Falha ao startar o servidor. Codigo de erro: " + std::to_string(SocketHelper::getLastError()) + ".\n");
         }
@@ -31,7 +31,7 @@ void NetworkServer::start(uint16_t port) {
                 socklen_t clientLen = sizeof(client);
 
                 const SOCKET clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
-                if (clientSock == SOCKET_ERROR) {
+                if (clientSock == SOCKET_ERR) {
                         if (!isActive) {
                                 std::cout << "Servidor desligado com sucesso.\n";
                                 break;
@@ -52,8 +52,8 @@ void NetworkServer::start(uint16_t port) {
 void NetworkServer::shutdown() {
         isActive = false;
 
-        if (sock != INVALID_SOCKET) {
+        if (sock != INVALID_SOCKET_FD) {
                 SocketHelper::closeSocket(sock);
-                sock = INVALID_SOCKET;
+                sock = INVALID_SOCKET_FD;
         }
 }

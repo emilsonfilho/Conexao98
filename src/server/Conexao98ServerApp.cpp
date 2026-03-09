@@ -1,7 +1,6 @@
 #include "Conexao98ServerApp.h"
 
 #include <iostream>
-#include <winsock2.h>
 
 #include "../common/exceptions/SystemException.h"
 #include "../common/platform/SocketHelper.h"

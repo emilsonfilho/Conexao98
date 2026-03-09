@@ -21,6 +21,10 @@ void SocketHelper::cleanupSystem() {
     #endif
 }
 
+void SocketHelper::shutdownSystem(const Socket sock) {
+    shutdown(sock, SOCKET_SHUTDOWN_BOTH);
+}
+
 void SocketHelper::closeSocket(Socket sock) {
     #ifdef _WIN32
         closesocket(sock);
@@ -35,4 +39,12 @@ int SocketHelper::getLastError() {
     #else
         return errno;
     #endif
+}
+
+char *SocketHelper::inetToAddress(const sockaddr_in address) {
+    return inet_ntoa(address.sin_addr);
+}
+
+u_long SocketHelper::networkToHost(const sockaddr_in address) {
+    return ntohs(address.sin_port);
 }

@@ -5,4 +5,10 @@
 
 using ConnectionId = uint64_t;
 
+#ifndef _WIN32
+    using Socket = SOCKET;
+#else
+    using Socket = int;
+#endif
+
 #endif //CONEXAO98_TYPES_H

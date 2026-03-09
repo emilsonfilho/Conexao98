@@ -4,8 +4,15 @@
 
 #ifndef CONEXAO98_SOCKETHELPER_H
 #define CONEXAO98_SOCKETHELPER_H
-#include <winsock2.h>
+#include "../Types.h"
 
+#ifdef _WIN32
+    #include <winsock2.h>
+#elif (__linux__)
+    #include <sys/socket.h>
+    #include <unistd.h>
+    #include <cerrno>
+#endif
 
 class SocketHelper {
 public:
@@ -13,7 +20,7 @@ public:
 
     static bool initSystem();
     static void cleanupSystem();
-    static void closeSocket(SOCKET sock);
+    static void closeSocket(Socket sock);
     static int getLastError();
 };
 

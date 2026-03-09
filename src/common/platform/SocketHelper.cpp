@@ -5,22 +5,34 @@
 #include "SocketHelper.h"
 
 bool SocketHelper::initSystem() {
-    WSADATA wsaData;
+    #ifdef _WIN32
+        WSADATA wsaData;
 
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-        return false;
+        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+            return false;
 
-    return true;
+        return true;
+    #endif
 }
 
 void SocketHelper::cleanupSystem() {
-    WSACleanup();
+    #ifdef _WIN32
+        WSACleanup();
+    #endif
 }
 
-void SocketHelper::closeSocket(SOCKET sock) {
-    closesocket(sock);
+void SocketHelper::closeSocket(Socket sock) {
+    #ifndef _WIN32
+        closesocket(sock);
+    #elif __linux__
+        close(sock);
+    #endif
 }
 
 int SocketHelper::getLastError() {
-    return WSAGetLastError();
+    #ifndef _WIN32
+        return WSAGetLastError();
+    #else
+        return errno;
+    #endif
 }

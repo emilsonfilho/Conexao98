@@ -10,11 +10,11 @@ Conexao98ServerApp::Conexao98ServerApp() = default;
 
 Conexao98ServerApp::~Conexao98ServerApp() {
     if (isWSAInitialized) SocketHelper::cleanupSystem();
-    std::cout << "[APP] Desligando subsistema de rede do Windows...\n";
+    std::cout << "[APP] Desligando subsistema de rede...\n";
 }
 
 void Conexao98ServerApp::init() {
-    std::cout << "[APP] Inicializando subsistema de rede do Windows...\n";
+    std::cout << "[APP] Inicializando subsistema de rede...\n";
 
     if (!SocketHelper::initSystem())
         throw SystemException("Falha no WSAStartup");

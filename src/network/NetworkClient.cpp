@@ -5,6 +5,7 @@
 #include "NetworkClient.h"
 #include "../common/ByteArray.h"
 #include "../common/exceptions/NetworkException.h"
+#include "../common/platform/SocketHelper.h"
 
 NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener), wsaData(WSADATA{}) {}
 
@@ -19,7 +20,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     inet_pton(AF_INET, ip, &address.sin_addr);
 
     if (connect(sock, reinterpret_cast<sockaddr *>(&address), sizeof(address)) == SOCKET_ERROR) {
-        closesocket(sock);
+        SocketHelper::closeSocket(sock);
         throw NetworkException( "Failed to connect to server.");
     }
 

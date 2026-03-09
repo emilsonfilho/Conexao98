@@ -4,22 +4,22 @@
 #include <winsock2.h>
 
 #include "../common/exceptions/SystemException.h"
+#include "../common/platform/SocketHelper.h"
 
 Conexao98ServerApp::Conexao98ServerApp() = default;
 
 Conexao98ServerApp::~Conexao98ServerApp() {
-    if (isWsaInitialized) WSACleanup();
+    if (isWSAInitialized) SocketHelper::cleanupSystem();
     std::cout << "[APP] Desligando subsistema de rede do Windows...\n";
 }
 
 void Conexao98ServerApp::init() {
     std::cout << "[APP] Inicializando subsistema de rede do Windows...\n";
-    WSADATA wsaData;
 
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+    if (!SocketHelper::initSystem())
         throw SystemException("Falha no WSAStartup");
 
-    isWsaInitialized = true;
+    isWSAInitialized = true;
 
     chatManager = std::make_unique<ChatManager>();
     chatManager->initializeHandlers();

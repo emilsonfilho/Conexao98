@@ -6,6 +6,7 @@
 #include "NetworkServer.h"
 
 #include "../common/exceptions/NetworkException.h"
+#include "../common/platform/SocketHelper.h"
 
 
 NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isActive(false) {
@@ -19,8 +20,8 @@ void NetworkServer::start(uint16_t port) {
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
         if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERROR) {
-                closesocket(sock);
-                throw NetworkException("Falha ao startar o servidor. Codigo de erro: " + std::to_string(WSAGetLastError()) + ".\n");
+                SocketHelper::closeSocket(sock);
+                throw NetworkException("Falha ao startar o servidor. Codigo de erro: " + std::to_string(SocketHelper::getLastError()) + ".\n");
         }
 
         listen(sock, 5);
@@ -38,7 +39,7 @@ void NetworkServer::start(uint16_t port) {
                                 break;
                         }
 
-                        std::cerr << "Falha ao aceitar cliente. Ignorando... Erro: " << WSAGetLastError() << "\n";
+                        std::cerr << "Falha ao aceitar cliente. Ignorando... Erro: " << SocketHelper::getLastError() << "\n";
                         continue;
                 }
 
@@ -54,7 +55,7 @@ void NetworkServer::shutdown() {
         isActive = false;
 
         if (sock != INVALID_SOCKET) {
-                closesocket(sock);
+                SocketHelper::closeSocket(sock);
                 sock = INVALID_SOCKET;
         }
 }

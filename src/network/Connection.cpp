@@ -4,6 +4,8 @@
 #include <ws2tcpip.h>
 #include <stdexcept>
 
+#include "../common/platform/SocketHelper.h"
+
 Connection::Connection(ConnectionId id, const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
 id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
@@ -27,10 +29,10 @@ std::string Connection::getSenderId() const {
 
 void Connection::sendData(const ByteArray& data) const {
         if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERROR) {
-                const int errorCode = WSAGetLastError();
+                const int errorCode = SocketHelper::getLastError();
 
                 std::cerr << "Erro enquanto enviava a mensagem.\n";
-                closesocket(socket);
+                SocketHelper::closeSocket(socket);
 
                 throw std::runtime_error("Erro no sendData. Codigo Winsock: " + std::to_string(errorCode));
         }
@@ -56,7 +58,7 @@ void Connection::stop() {
 
         if (socket != INVALID_SOCKET) {
                 shutdown(socket, SD_BOTH);
-                closesocket(socket);
+                SocketHelper::closeSocket(socket);
                 socket = INVALID_SOCKET;
         }
 }

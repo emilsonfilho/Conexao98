@@ -17,6 +17,8 @@
     #include <unistd.h>
     #include <cerrno>
     #include <arpa/inet.h>
+    #include <sys/types.h>
+    #include <netinet/in.h>
 #endif
 
 class SocketHelper {

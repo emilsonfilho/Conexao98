@@ -4,7 +4,7 @@
 #include "../common/ByteArray.h"
 #include "../common/exceptions/NetworkException.h"
 
-NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener), wsaData(WSADATA{}) {}
+NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener) {}
 
 void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     Socket sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

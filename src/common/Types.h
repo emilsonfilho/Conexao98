@@ -5,6 +5,8 @@
 
 #ifdef _WIN32
     #include <winsock2.h>
+#elif __linux__
+    #include <sys/socket.h>
 #endif
 
 using ConnectionId = uint64_t;

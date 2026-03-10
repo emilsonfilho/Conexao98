@@ -12,7 +12,6 @@ class NetworkClient : public ConnectionListener {
 private:
     std::unique_ptr<Connection> clientConnection;
     ConnectionListener* appListener;
-    WSADATA wsaData;
 public:
     explicit NetworkClient(ConnectionListener* listener);
 

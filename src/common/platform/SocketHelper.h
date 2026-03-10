@@ -33,6 +33,7 @@ public:
     static std::string inetToAddress(const sockaddr_in& address);
     static u_long networkToHost(const sockaddr_in& address);
     static uint16_t hostToNetworkShort(uint16_t port);
+    static u_long hostToNetworkLong(uint32_t value);
     static void presentationToNetwork(const char* ip, sockaddr_in& address);
 };
 

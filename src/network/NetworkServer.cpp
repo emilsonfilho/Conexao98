@@ -14,7 +14,7 @@ void NetworkServer::start(uint16_t port) {
         sockaddr_in addr{};
         addr.sin_family = AF_INET;
         addr.sin_port = SocketHelper::hostToNetworkShort(port);
-        addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        addr.sin_addr.s_addr = SocketHelper::hostToNetworkLong(INADDR_ANY);
 
         if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERR) {
                 SocketHelper::closeSocket(sock);
@@ -26,7 +26,7 @@ void NetworkServer::start(uint16_t port) {
 
         while (isActive) {
                 sockaddr_in client{};
-                socklen_t clientLen = sizeof(client);
+                SocketLen clientLen = sizeof(client);
 
                 const Socket clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
                 if (clientSock == SOCKET_ERR) {

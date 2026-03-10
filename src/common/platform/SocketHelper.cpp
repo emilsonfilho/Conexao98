@@ -57,6 +57,10 @@ uint16_t SocketHelper::hostToNetworkShort(const uint16_t port) {
     return htons(port);
 }
 
+u_long SocketHelper::hostToNetworkLong(uint32_t value) {
+    return htonl(value);
+}
+
 void SocketHelper::presentationToNetwork(const char* ip, sockaddr_in& address) {
     inet_pton(AF_INET, ip, &address.sin_addr);
 }

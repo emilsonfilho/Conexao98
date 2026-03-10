@@ -5,6 +5,8 @@
 #ifndef CONEXAO98_SOCKETHELPER_H
 #define CONEXAO98_SOCKETHELPER_H
 
+#include <string>
+
 #include "../Types.h"
 
 #ifdef _WIN32
@@ -14,6 +16,7 @@
     #include <sys/socket.h>
     #include <unistd.h>
     #include <cerrno>
+    #include <arpa/inet.h>
 #endif
 
 class SocketHelper {
@@ -25,8 +28,10 @@ public:
     static void shutdownSystem(Socket sock);
     static void closeSocket(Socket sock);
     static int getLastError();
-    static char* inetToAddress(sockaddr_in address);
+    static std::string inetToAddress(sockaddr_in address);
     static u_long networkToHost(sockaddr_in address);
+    static uint16_t hostToNetworkShort(uint16_t port);
+    static void presentationToNetwork(const char* ip, sockaddr_in address);
 };
 
 

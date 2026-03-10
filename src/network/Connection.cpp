@@ -20,10 +20,10 @@ void Connection::start() {
 }
 
 std::string Connection::getSenderId() const {
-        char* ip = SocketHelper::inetToAddress(address);
+        const std::string ip = SocketHelper::inetToAddress(address);
         const u_long port = SocketHelper::networkToHost(address);
 
-        return std::string(ip) + ":" + std::to_string(port);
+        return ip + ":" + std::to_string(port);
 }
 
 void Connection::sendData(const ByteArray& data) const {

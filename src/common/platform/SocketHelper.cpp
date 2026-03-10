@@ -41,10 +41,22 @@ int SocketHelper::getLastError() {
     #endif
 }
 
-char *SocketHelper::inetToAddress(const sockaddr_in address) {
-    return inet_ntoa(address.sin_addr);
+std::string SocketHelper::inetToAddress(const sockaddr_in address) {
+    char buffer[INET_ADDRSTRLEN];
+
+    inet_ntop(AF_INET, &address.sin_addr, buffer, INET_ADDRSTRLEN);
+
+    return std::string(buffer);
 }
 
 u_long SocketHelper::networkToHost(const sockaddr_in address) {
     return ntohs(address.sin_port);
+}
+
+uint16_t SocketHelper::hostToNetworkShort(const uint16_t port) {
+    return htons(port);
+}
+
+void SocketHelper::presentationToNetwork(const char* ip, sockaddr_in address) {
+    inet_pton(AF_INET, ip, &address.sin_addr);
 }

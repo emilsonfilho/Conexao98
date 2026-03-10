@@ -1,11 +1,12 @@
 #ifndef CONEXAO98_NETWORKCLIENT_H
 #define CONEXAO98_NETWORKCLIENT_H
 
-#include <winsock2.h>
+
 
 #include "ConnectionListener.h"
 #include "Connection.h"
 #include "../protocol/Message.h"
+#include "../common/platform/SocketHelper.h"
 
 class NetworkClient : public ConnectionListener {
 private:

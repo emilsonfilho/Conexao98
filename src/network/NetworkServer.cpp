@@ -1,4 +1,3 @@
-#include <ws2tcpip.h>
 #include <memory>
 #include <iostream>
 
@@ -14,7 +13,7 @@ NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isAct
 void NetworkServer::start(uint16_t port) {
         sockaddr_in addr{};
         addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
+        addr.sin_port = SocketHelper::hostToNetworkShort(port);
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
         if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == SOCKET_ERR) {
@@ -25,12 +24,11 @@ void NetworkServer::start(uint16_t port) {
         listen(sock, 5);
         isActive = true;
 
-
         while (isActive) {
                 sockaddr_in client{};
                 socklen_t clientLen = sizeof(client);
 
-                const SOCKET clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
+                const Socket clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
                 if (clientSock == SOCKET_ERR) {
                         if (!isActive) {
                                 std::cout << "Servidor desligado com sucesso.\n";
@@ -42,7 +40,7 @@ void NetworkServer::start(uint16_t port) {
                 }
 
                 std::cout << "Client connected:"
-                         << inet_ntoa(client.sin_addr)
+                         << SocketHelper::inetToAddress(client)
                          << "\n";
 
                 appListener->onIncomingConnection(clientSock, client);

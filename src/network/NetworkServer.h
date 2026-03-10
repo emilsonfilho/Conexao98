@@ -3,7 +3,6 @@
 
 #include <atomic>
 
-#include "Connection.h"
 #include "ServerListener.h"
 #include "../common/platform/SocketHelper.h"
 

@@ -20,7 +20,7 @@ Conexao98ClientApp::~Conexao98ClientApp() {
 bool Conexao98ClientApp::init() {
     try {
        if (!SocketHelper::initSystem())
-            throw SystemException("Network initialization failed (WSAStartup).");
+            throw SystemException("Network initialization failed.");
 
         isWSAInitialized = true;
 

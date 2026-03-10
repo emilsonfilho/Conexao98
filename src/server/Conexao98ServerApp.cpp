@@ -16,7 +16,7 @@ void Conexao98ServerApp::init() {
     std::cout << "[APP] Inicializando subsistema de rede...\n";
 
     if (!SocketHelper::initSystem())
-        throw SystemException("Falha no WSAStartup. Erro: " + std::to_string(SocketHelper::getLastError()));
+        throw SystemException("Falha no subsistema de rede. Erro: " + std::to_string(SocketHelper::getLastError()));
 
     isWSAInitialized = true;
 

@@ -33,7 +33,7 @@ void Connection::sendData(const ByteArray& data) const {
                 std::cerr << "Erro enquanto enviava a mensagem.\n";
                 SocketHelper::closeSocket(socket);
 
-                throw std::runtime_error("Erro no sendData. Codigo Winsock: " + std::to_string(errorCode));
+                throw std::runtime_error("Erro no sendData. Codigo de erro do socket: " + std::to_string(errorCode));
         }
 }
 

@@ -30,10 +30,10 @@ public:
     static void shutdownSystem(Socket sock);
     static void closeSocket(Socket sock);
     static int getLastError();
-    static std::string inetToAddress(sockaddr_in address);
-    static u_long networkToHost(sockaddr_in address);
+    static std::string inetToAddress(const sockaddr_in& address);
+    static u_long networkToHost(const sockaddr_in& address);
     static uint16_t hostToNetworkShort(uint16_t port);
-    static void presentationToNetwork(const char* ip, sockaddr_in address);
+    static void presentationToNetwork(const char* ip, sockaddr_in& address);
 };
 
 

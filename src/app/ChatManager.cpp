@@ -56,7 +56,7 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
     }
 }
 
-void ChatManager::onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) {
+void ChatManager::onIncomingConnection(Socket clientSock, sockaddr_in clientData) {
     ConnectionId id = nextConnectionId++;
     auto conn = std::make_unique<Connection>(id, clientSock, clientData, this);
 

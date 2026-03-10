@@ -2,6 +2,7 @@
 
 #include "../ConsoleChatListener.h"
 #include "../../common/exceptions/SystemException.h"
+#include "../../common/platform/SocketHelper.h"
 #include "../../protocol/messages/ChatMessage.h"
 #include "../../protocol/messages/JoinMessage.h"
 
@@ -9,20 +10,19 @@ Conexao98ClientApp::Conexao98ClientApp() {
     clientListener = std::make_unique<ConsoleChatListener>();
     client = std::make_unique<NetworkClient>(clientListener.get());
     isActive = false;
+    isWSAInitialized = false;
 }
 
 Conexao98ClientApp::~Conexao98ClientApp() {
-    if (isWsaInitialized) WSACleanup();
+    if (isWSAInitialized) SocketHelper::cleanupSystem();
 }
 
 bool Conexao98ClientApp::init() {
     try {
-        WSADATA wsaData;
+       if (!SocketHelper::initSystem())
+            throw SystemException("Network initialization failed.");
 
-        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-            throw SystemException("Network initialization failed (WSAStartup).");
-
-        isWsaInitialized = true;
+        isWSAInitialized = true;
 
         client->connectToServer("127.0.0.1", 3000);
 

@@ -11,7 +11,7 @@ private:
     std::unique_ptr<NetworkClient> client;
 
     bool isActive;
-    bool isWsaInitialized;
+    bool isWSAInitialized;
 public:
     Conexao98ClientApp();
     ~Conexao98ClientApp();

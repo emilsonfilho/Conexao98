@@ -1,10 +1,11 @@
 #include "Connection.h"
 
 #include <iostream>
-#include <ws2tcpip.h>
 #include <stdexcept>
 
-Connection::Connection(ConnectionId id, const SOCKET sock, const sockaddr_in addr, ConnectionListener* listen):
+#include "../common/platform/SocketHelper.h"
+
+Connection::Connection(const ConnectionId id, const Socket sock, const sockaddr_in addr, ConnectionListener* listen):
 id(id), socket(sock), address(addr), listener(listen), isActive(true) {}
 
 Connection::~Connection() {
@@ -19,20 +20,20 @@ void Connection::start() {
 }
 
 std::string Connection::getSenderId() const {
-        char* ip = inet_ntoa(address.sin_addr);
-        const u_long port = ntohs(address.sin_port);
+        const std::string ip = SocketHelper::inetToAddress(address);
+        const u_long port = SocketHelper::networkToHost(address);
 
-        return std::string(ip) + ":" + std::to_string(port);
+        return ip + ":" + std::to_string(port);
 }
 
 void Connection::sendData(const ByteArray& data) const {
-        if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERROR) {
-                const int errorCode = WSAGetLastError();
+                if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERR) {
+                const int errorCode = SocketHelper::getLastError();
 
                 std::cerr << "Erro enquanto enviava a mensagem.\n";
-                closesocket(socket);
+                SocketHelper::closeSocket(socket);
 
-                throw std::runtime_error("Erro no sendData. Codigo Winsock: " + std::to_string(errorCode));
+                throw std::runtime_error("Erro no sendData. Codigo de erro do socket: " + std::to_string(errorCode));
         }
 }
 
@@ -54,10 +55,10 @@ void Connection::listen() {
 void Connection::stop() {
         isActive = false;
 
-        if (socket != INVALID_SOCKET) {
-                shutdown(socket, SD_BOTH);
-                closesocket(socket);
-                socket = INVALID_SOCKET;
+        if (socket != INVALID_SOCKET_FD) {
+                SocketHelper::shutdownSystem(socket);
+                SocketHelper::closeSocket(socket);
+                socket = INVALID_SOCKET_FD;
         }
 }
 

@@ -37,6 +37,8 @@ add_executable(server src/server/main.cpp
         src/common/exceptions/ProtocolException.h
         src/app/ConnectionReaper.cpp
         src/app/ConnectionReaper.h
+        src/common/platform/SocketHelper.cpp
+        src/common/platform/SocketHelper.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -79,6 +81,8 @@ add_executable(client src/client/main/main.cpp
         src/common/exceptions/ProtocolException.h
         src/app/ConnectionReaper.cpp
         src/app/ConnectionReaper.h
+        src/common/platform/SocketHelper.cpp
+        src/common/platform/SocketHelper.h
 )
 
 if (WIN32)

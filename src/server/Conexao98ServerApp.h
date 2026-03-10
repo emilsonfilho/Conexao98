@@ -6,7 +6,7 @@
 
 class Conexao98ServerApp {
 private:
-    bool isWsaInitialized = false;
+    bool isWSAInitialized{};
 
     std::unique_ptr<ChatManager> chatManager;
     std::unique_ptr<NetworkServer> server;

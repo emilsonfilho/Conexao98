@@ -8,6 +8,7 @@
 #include "ConnectionReaper.h"
 #include "UserSession.h"
 
+#include "../common/Types.h"
 #include "../network/ConnectionListener.h"
 #include "../network/ServerListener.h"
 #include "../protocol/MessageFactory.h"
@@ -35,7 +36,7 @@ public:
     void broadcast(Message* msg, const UserSession& ignoreSession);
 
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
-    void onIncomingConnection(SOCKET clientSock, sockaddr_in clientData) override;
+    void onIncomingConnection(Socket clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
 };
 

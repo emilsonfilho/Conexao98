@@ -1,7 +1,6 @@
 #ifndef CONEXAO98_CONNECTION_H
 #define CONEXAO98_CONNECTION_H
 
-#include <winsock2.h>
 #include <string>
 #include <thread>
 #include <atomic>
@@ -13,13 +12,13 @@
 class Connection {
 private:
     ConnectionId id;
-    SOCKET socket;
+    Socket socket;
     sockaddr_in address;
     ConnectionListener* listener;
     std::thread listenerThread;
     std::atomic<bool> isActive;
 public:
-    Connection(ConnectionId id, SOCKET sock, sockaddr_in addr, ConnectionListener* listen);
+    Connection(ConnectionId id, Socket sock, sockaddr_in addr, ConnectionListener* listen);
     Connection(const Connection&) = delete;
     Connection& operator=(const Connection&) = delete;
     Connection(Connection&&) = delete;

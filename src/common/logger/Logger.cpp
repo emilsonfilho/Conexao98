@@ -35,7 +35,7 @@ std::string Logger::levelToString(const LogLevelEnum logLevel) {
         case LogLevelEnum::INFO:
             logLevelString += "INFO";
             break;
-        case LogLevelEnum::ERROR:
+        case LogLevelEnum::ERR:
             logLevelString += "ERROR";
             break;
         case LogLevelEnum::WARNING:
@@ -95,7 +95,7 @@ void Logger::warning(const std::string& logMessage) {
 }
 
 void Logger::error(const std::string &logMessage) {
-    generalLog(LogLevelEnum::ERROR, logMessage);
+    generalLog(LogLevelEnum::ERR, logMessage);
 }
 
 void Logger::debug(const std::string &logMessage) {

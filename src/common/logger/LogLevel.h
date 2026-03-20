@@ -9,7 +9,7 @@ enum class LogLevelEnum {
     DEBUG,
     INFO,
     WARNING,
-    ERROR
+    ERR
 };
 
 #endif //CONEXAO98_LOGLEVEL_H

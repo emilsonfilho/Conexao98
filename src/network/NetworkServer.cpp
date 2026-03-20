@@ -4,6 +4,7 @@
 #include "NetworkServer.h"
 
 #include "../common/exceptions/NetworkException.h"
+#include "../common/logger/Logger.h"
 
 
 NetworkServer::NetworkServer(ServerListener* listen): appListener(listen), isActive(false) {
@@ -31,17 +32,15 @@ void NetworkServer::start(uint16_t port) {
                 const Socket clientSock = accept(sock, reinterpret_cast<sockaddr *>(&client), &clientLen);
                 if (clientSock == SOCKET_ERR) {
                         if (!isActive) {
-                                std::cout << "Servidor desligado com sucesso.\n";
+                                Logger::getLogger().info("Servidor desligado com sucesso.");
                                 break;
                         }
 
-                        std::cerr << "Falha ao aceitar cliente. Ignorando... Erro: " << SocketHelper::getLastError() << "\n";
+                        Logger::getLogger().error(std::string("Falha ao aceitar cliente. Ignorando... Erro: ") + std::to_string(SocketHelper::getLastError()));
                         continue;
                 }
 
-                std::cout << "Client connected:"
-                         << SocketHelper::inetToAddress(client)
-                         << "\n";
+                Logger::getLogger().info("Client connected:" + SocketHelper::inetToAddress(client));
 
                 appListener->onIncomingConnection(clientSock, client);
         }

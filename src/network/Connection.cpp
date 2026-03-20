@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "../common/logger/Logger.h"
 #include "../common/platform/SocketHelper.h"
 
 Connection::Connection(const ConnectionId id, const Socket sock, const sockaddr_in addr, ConnectionListener* listen):
@@ -27,10 +28,10 @@ std::string Connection::getSenderId() const {
 }
 
 void Connection::sendData(const ByteArray& data) const {
-                if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERR) {
+        if (const int iResult = send(socket, data.data(), static_cast<int>(data.size()), 0); iResult == SOCKET_ERR) {
                 const int errorCode = SocketHelper::getLastError();
 
-                std::cerr << "Erro enquanto enviava a mensagem.\n";
+                Logger::getLogger().error("Erro enquanto enviava a mensagem.");
                 SocketHelper::closeSocket(socket);
 
                 throw std::runtime_error("Erro no sendData. Codigo de erro do socket: " + std::to_string(errorCode));

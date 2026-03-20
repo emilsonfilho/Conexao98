@@ -4,6 +4,7 @@
 
 #include "ConsoleChatListener.h"
 
+#include "../common/logger/Logger.h"
 #include "printers/ChatPrinter.h"
 #include "printers/JoinPrinter.h"
 
@@ -16,14 +17,14 @@ void ConsoleChatListener::onMessageReceived(Connection &conn, const ByteArray &d
     const std::unique_ptr<Message> msg = MessageFactory::create(data);
 
     if (!msg) {
-        std::cerr << "[CLIENT]: Malformed or unknown message payload received.\n";
+        Logger::getLogger().error("[CLIENT]: Malformed or unknown message payload received.");
         return;
     }
 
     if (const auto it = printers.find(msg->getType()); it != printers.end()) {
         it->second->handle(msg.get());
     } else {
-        std::cerr << "[CLIENT]: Message of unknown type received\n";
+        Logger::getLogger().error("[CLIENT]: Message of unknown type received");
     }
 }
 

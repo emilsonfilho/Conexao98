@@ -4,6 +4,7 @@
 
 #include <cstring>
 
+#include "../common/logger/Logger.h"
 #include "messages/JoinMessage.h"
 #include "messages/ChatMessage.h"
 
@@ -16,7 +17,7 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
 
     if (type == MessageType::JOIN) {
         if (data.size() < 2) {
-            std::cout << "Malformed JoinMessage\n";
+            Logger::getLogger().error("Malformed JoinMessage");
             return nullptr;
         }
 
@@ -30,7 +31,7 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
 
     if (type == MessageType::CHAT) {
         if (data.size() < 3) {
-            std::cout << "Malformed ChatMessage\n";
+            Logger::getLogger().error("Malformed ChatMessage");
             return nullptr;
         }
 
@@ -45,6 +46,6 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
         return std::make_unique<ChatMessage>(nick, text);
     }
 
-    std::cout << "No MessageType corresponding\n";
+    Logger::getLogger().error("No MessageType corresponding");
     return nullptr;
 }

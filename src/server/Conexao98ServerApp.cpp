@@ -3,17 +3,18 @@
 #include <iostream>
 
 #include "../common/exceptions/SystemException.h"
+#include "../common/logger/Logger.h"
 #include "../common/platform/SocketHelper.h"
 
 Conexao98ServerApp::Conexao98ServerApp() = default;
 
 Conexao98ServerApp::~Conexao98ServerApp() {
     if (isWSAInitialized) SocketHelper::cleanupSystem();
-    std::cout << "[APP] Desligando subsistema de rede...\n";
+    Logger::getLogger().debug("[APP] Desligando subsistema de rede...");
 }
 
 void Conexao98ServerApp::init() {
-    std::cout << "[APP] Inicializando subsistema de rede...\n";
+    Logger::getLogger().debug("[APP] Inicializando subsistema de rede...");
 
     if (!SocketHelper::initSystem())
         throw SystemException("Falha no subsistema de rede. Erro: " + std::to_string(SocketHelper::getLastError()));

@@ -1,8 +1,6 @@
 #include "ChatManager.h"
 
-#include <iostream>
-#include <ostream>
-
+#include "../common/logger/Logger.h"
 #include "handlers/ChatHandler.h"
 #include "handlers/JoinHandler.h"
 
@@ -30,11 +28,11 @@ void ChatManager::broadcast(Message *msg, const UserSession& ignoreSession) {
 }
 
 void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
-    std::cout << "Teste de chegada no ChatManager onMessageReceived\n";
+    Logger::getLogger().debug("Teste de chegada no ChatManager onMessageReceived");
     std::unique_ptr<Message> msg = MessageFactory::create(data);
 
     if (msg == nullptr) {
-        std::cout << "Error while creating message in onMessageReceived\n";
+        Logger::getLogger().error("Error while creating message in onMessageReceived");
         return;
     }
 
@@ -52,7 +50,7 @@ void ChatManager::onMessageReceived(Connection &conn, const ByteArray &data) {
         if (const auto itHandler = messageHandlers.find(msg->getType()); itHandler != messageHandlers.end())
             itHandler->second->handle(this, *user, std::move(msg));
         else
-            std::cerr << "Handler nao encontrado para o tipo " << static_cast<int>(msg->getType()) << '\n';
+            Logger::getLogger().error(std::string("Handler nao encontrado para o tipo ") + std::to_string(static_cast<int>(msg->getType())));
     }
 }
 

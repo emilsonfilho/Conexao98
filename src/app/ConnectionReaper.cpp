@@ -8,6 +8,8 @@
 #include <mutex>
 #include <chrono>
 
+#include "../common/logger/Logger.h"
+
 ConnectionReaper::ConnectionReaper() {
     isServerActive = true;
 
@@ -39,7 +41,7 @@ void ConnectionReaper::cleanupLoop() {
             std::unique_ptr<UserSession> session = std::move(cleanupQueue.front());
             cleanupQueue.pop();
 
-            std::cout << "Connection limpada!\n";
+            Logger::getLogger().debug("Connection limpada!");
         }
     }
 }

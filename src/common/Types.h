@@ -3,8 +3,6 @@
 
 #include <cstdint>
 
-#include "platform/SocketHelper.h"
-
 #ifdef _WIN32
     #include <winsock2.h>
 #elif __linux__

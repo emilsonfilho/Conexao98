@@ -39,6 +39,9 @@ add_executable(server src/server/main.cpp
         src/app/ConnectionReaper.h
         src/common/platform/SocketHelper.cpp
         src/common/platform/SocketHelper.h
+        src/common/logger/Logger.cpp
+        src/common/logger/Logger.h
+        src/common/logger/LogLevel.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -83,6 +86,9 @@ add_executable(client src/client/main/main.cpp
         src/app/ConnectionReaper.h
         src/common/platform/SocketHelper.cpp
         src/common/platform/SocketHelper.h
+        src/common/logger/Logger.cpp
+        src/common/logger/Logger.h
+        src/common/logger/LogLevel.h
 )
 
 if (WIN32)

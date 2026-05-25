@@ -17,14 +17,14 @@ Conexao98ClientApp::~Conexao98ClientApp() {
     if (isWSAInitialized) SocketHelper::cleanupSystem();
 }
 
-bool Conexao98ClientApp::init() {
+bool Conexao98ClientApp::init(const std::string& ip, uint16_t port) {
     try {
        if (!SocketHelper::initSystem())
             throw SystemException("Network initialization failed.");
 
         isWSAInitialized = true;
 
-        client->connectToServer("127.0.0.1", 3000);
+        client->connectToServer(ip, port);
 
         std::cout << "Bem-vindo ao Conexao98!\nDigite seu nick: " << std::endl;
 

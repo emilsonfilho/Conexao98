@@ -16,7 +16,7 @@ public:
     Conexao98ClientApp();
     ~Conexao98ClientApp();
 
-    bool init();
+    bool init(const std::string& ip, uint16_t port);
     void run();
     void stop();
 };

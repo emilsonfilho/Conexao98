@@ -15,7 +15,7 @@ private:
 public:
     explicit NetworkClient(ConnectionListener* listener);
 
-    void connectToServer(const char* ip, uint16_t port);
+    void connectToServer(const std::string& ip, uint16_t port);
 
     void sendMessage(Message* msg) const;
 

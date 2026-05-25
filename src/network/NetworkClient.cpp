@@ -6,7 +6,7 @@
 
 NetworkClient::NetworkClient(ConnectionListener *listener): clientConnection(nullptr), appListener(listener) {}
 
-void NetworkClient::connectToServer(const char *ip, uint16_t port) {
+void NetworkClient::connectToServer(const std::string& ip, uint16_t port) {
     Socket sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sock == INVALID_SOCKET_FD)
         throw NetworkException("Failed to create TCP client socket.");
@@ -14,7 +14,7 @@ void NetworkClient::connectToServer(const char *ip, uint16_t port) {
     sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_port = SocketHelper::hostToNetworkShort(port);
-    SocketHelper::presentationToNetwork(ip, address);
+    SocketHelper::presentationToNetwork(ip.c_str(), address);
 
     if (connect(sock, reinterpret_cast<sockaddr *>(&address), sizeof(address)) == SOCKET_ERR) {
         SocketHelper::closeSocket(sock);

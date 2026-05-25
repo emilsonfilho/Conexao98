@@ -8,7 +8,7 @@
 
 class NetworkServer {
 private:
-    SOCKET sock;
+    Socket sock;
     ServerListener* appListener;
     std::atomic<bool> isActive;
 public:

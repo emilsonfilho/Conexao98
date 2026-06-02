@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.20) # required
 project(Conexao98) # required
 
+include(FetchContent)
+
+FetchContent_Declare(
+        ftxui
+        GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI
+        GIT_TAG        v5.0.0
+)
+
+FetchContent_MakeAvailable(ftxui)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -92,6 +102,12 @@ add_executable(client src/client/main/main.cpp
 )
 
 if (WIN32)
-    target_link_libraries(server ws2_32) # linka uma liba a um executável previamente criado
-    target_link_libraries(client ws2_32)
+    target_link_libraries(server PRIVATE ws2_32) # linka uma liba a um executável previamente criado
+    target_link_libraries(client PRIVATE ws2_32)
 endif()
+
+target_link_libraries(client
+        PRIVATE ftxui::screen
+        PRIVATE ftxui::dom
+        PRIVATE ftxui::component
+)

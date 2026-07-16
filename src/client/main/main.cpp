@@ -4,13 +4,12 @@
 #include "../../common/exceptions/Conexao98Exception.h"
 
 int main(int argc, char* argv[]) {
-    std::string ip = "";
+
     uint16_t port = 0;
 
     try {
         if (argc == 1) {
-            std::cout << "Digite o IP: ";
-            std::cin >> ip;
+
 
             std::cout << "Digite a porta: ";
             std::string portStr;

@@ -89,6 +89,10 @@ add_executable(client src/client/main/main.cpp
         src/common/logger/Logger.cpp
         src/common/logger/Logger.h
         src/common/logger/LogLevel.h
+        src/common/utils/InputValidator.cpp
+        src/common/utils/InputValidator.h
+        src/client/ui/TerminalPrompter.cpp
+        src/client/ui/TerminalPrompter.h
 )
 
 if (WIN32)

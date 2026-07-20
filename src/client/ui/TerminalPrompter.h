@@ -5,7 +5,12 @@
 
 #include <string>
 
+#include "../../common/utils/InputValidator.h"
+
 class TerminalPrompter {
+private:
+    static std::string getMessage(InputValidator::NicknameError error);
+    static std::string getMessage(InputValidator::PortError error);
 public:
     static std::string askForIP();
     static uint16_t askForPort();

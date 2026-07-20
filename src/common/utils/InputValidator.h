@@ -22,8 +22,8 @@ public:
         OutOfRange
     };
 
-    static NicknameError isValidNickname(const std::string& nick);
-    static PortError tryParsePort(const std::string& input, uint16_t& outPort);
+    static NicknameError validateNickname(const std::string& nick);
+    static PortError validatePort(const std::string& input, uint16_t& outPort);
     static bool isValidIPv4(const std::string& ip);
 };
 

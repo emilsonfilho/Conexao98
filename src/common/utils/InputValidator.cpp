@@ -4,7 +4,7 @@
 #include <ws2tcpip.h>
 #include <psdk_inc/_ip_types.h>
 
-InputValidator::NicknameError InputValidator::isValidNickname(const std::string &nick) {
+InputValidator::NicknameError InputValidator::validateNickname(const std::string &nick) {
     if (nick.empty()) return NicknameError::Empty;
 
     const size_t nickLength = nick.length();
@@ -20,9 +20,12 @@ InputValidator::NicknameError InputValidator::isValidNickname(const std::string 
     return NicknameError::None;
 }
 
-InputValidator::PortError InputValidator::tryParsePort(const std::string &input, uint16_t &outPort) {
+InputValidator::PortError InputValidator::validatePort(const std::string &input, uint16_t &outPort) {
     int port = 0;
     std::size_t pos = 0;
+
+    if (input.empty())
+        return PortError::Empty;
 
     try {
         port = std::stoi(input, &pos);
@@ -30,7 +33,7 @@ InputValidator::PortError InputValidator::tryParsePort(const std::string &input,
         return PortError::InvalidNumber;
     }
 
-    if (pos != input.size()) return PortError::Empty;
+    if (pos != input.size()) return PortError::InvalidNumber;
 
     if (port < 1 or port > 65535) return PortError::OutOfRange;
 

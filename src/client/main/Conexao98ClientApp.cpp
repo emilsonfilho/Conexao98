@@ -26,7 +26,7 @@ bool Conexao98ClientApp::init(const std::string& ip, uint16_t port) {
 
         client->connectToServer(ip, port);
 
-        std::cout << "Bem-vindo ao Conexao98!\nDigite seu nick: " << std::endl;
+        std::cout << "Bem-vindo ao Conexao98!\nDigite seu nick: ";
 
         std::getline(std::cin, nickname);
 

@@ -105,6 +105,8 @@ add_executable(client src/client/main/main.cpp
         src/client/ui/ChatState.h
         src/client/ui/ChatView.cpp
         src/client/ui/ChatView.h
+        src/client/ui/ChatPresenter.cpp
+        src/client/ui/ChatPresenter.h
 )
 
 if (WIN32)

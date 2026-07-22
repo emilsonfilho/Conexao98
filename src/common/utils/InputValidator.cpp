@@ -12,7 +12,7 @@ InputValidator::NicknameError InputValidator::validateNickname(const std::string
     if (nickLength > 16) return NicknameError::TooLong;
 
     if (!std::all_of(nick.begin(), nick.end(), [](const unsigned char c) -> bool {
-        return std::isalnum(c) and c == '_';
+        return std::isalnum(c) or c == '_';
     })) {
         return NicknameError::InvalidCharacter;
     };

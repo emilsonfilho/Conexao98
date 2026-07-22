@@ -102,6 +102,9 @@ add_executable(client src/client/main/main.cpp
         src/common/utils/InputValidator.h
         src/client/ui/TerminalPrompter.cpp
         src/client/ui/TerminalPrompter.h
+        src/client/ui/ChatState.h
+        src/client/ui/ChatView.cpp
+        src/client/ui/ChatView.h
 )
 
 if (WIN32)

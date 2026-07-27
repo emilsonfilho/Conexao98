@@ -114,6 +114,11 @@ add_executable(client src/client/main/main.cpp
         src/client/ui/TUIListener.h
         src/client/ui/TUIChatLoop.cpp
         src/client/ui/TUIChatLoop.h
+        src/client/commands/IClientCommand.h
+        src/client/commands/ExitCommand.cpp
+        src/client/commands/ExitCommand.h
+        src/client/commands/CommandDispatcher.cpp
+        src/client/commands/CommandDispatcher.h
 )
 
 if (WIN32)

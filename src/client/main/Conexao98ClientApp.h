@@ -3,6 +3,7 @@
 
 #include "IChatLoop.h"
 #include "../../network/NetworkClient.h"
+#include "../commands/CommandDispatcher.h"
 
 class Conexao98ClientApp {
 private:
@@ -14,6 +15,8 @@ private:
 
     bool isActive;
     bool isWSAInitialized;
+
+    CommandDispatcher commandDispatcher;
 public:
     Conexao98ClientApp(std::unique_ptr<ConnectionListener> listener, std::unique_ptr<IChatLoop> loop);
     ~Conexao98ClientApp();

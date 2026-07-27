@@ -5,10 +5,14 @@
 #include "../../common/platform/SocketHelper.h"
 #include "../../protocol/messages/ChatMessage.h"
 #include "../../protocol/messages/JoinMessage.h"
+#include "../commands/ExitCommand.h"
 
 Conexao98ClientApp::Conexao98ClientApp(std::unique_ptr<ConnectionListener> listener, std::unique_ptr<IChatLoop> loop)
     : clientListener(std::move(listener)), loop(std::move(loop)), isActive(false), isWSAInitialized(false) {
     client = std::make_unique<NetworkClient>(clientListener.get());
+
+    commandDispatcher = CommandDispatcher();
+    commandDispatcher.registerCommand("/sair", std::make_unique<ExitCommand>());
 }
 
 Conexao98ClientApp::~Conexao98ClientApp() {
@@ -38,9 +42,7 @@ bool Conexao98ClientApp::init(const std::string& ip, uint16_t port, const std::s
 
 void Conexao98ClientApp::run() {
     loop->run([this](const std::string& inputText) {
-        if (inputText == "sair") {
-            this->stop();
-        } else {
+        if (!commandDispatcher.dispatch(inputText, *this)) {
             ChatMessage text(inputText);
             this->client->sendMessage(&text);
         }

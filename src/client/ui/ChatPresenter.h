@@ -17,6 +17,9 @@ public:
     void show();
 
     void addMessage(const std::string& message);
+
+    void setOnSendMessage(const std::function<void(std::string)> &onSendMessage);
+    void close();
 };
 
 

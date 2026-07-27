@@ -9,11 +9,11 @@
 #include "../../common/exceptions/ProtocolException.h"
 #include "../../protocol/messages/JoinMessage.h"
 
-void JoinPrinter::handle(Message *msg) {
+std::string JoinPrinter::format(Message *msg) const {
     auto* joinMsg = dynamic_cast<JoinMessage*>(msg);
 
     if (!joinMsg)
         throw ProtocolException("JoinPrinter::handle received a non-JoinMessage instance");
 
-    std::cout << ">>> " << joinMsg->getNickname() << " entrou no servidor! <<<\n";
+    return + ">>> " + joinMsg->getNickname() + " entrou no servidor! <<<\n";
 }

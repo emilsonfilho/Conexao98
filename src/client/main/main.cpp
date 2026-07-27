@@ -38,41 +38,78 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
-int main() {
-    std::string input_text;
-    std::vector<std::string> messages;
+#include "Conexao98ClientApp.h"
+#include "../../common/exceptions/Conexao98Exception.h"
+#include "../ui/ChatPresenter.h"
+#include "../ui/TerminalPrompter.h"
+#include "../ui/TUIChatLoop.h"
+#include "../ui/TUIListener.h"
 
-    ftxui::InputOption input_option;
-    input_option.on_enter = [&] {
-        if (!input_text.empty()) {
-            messages.push_back("Você " + input_text);
-            input_text.clear();
+int main(const int argc, char* argv[]) {
+    // std::string input_text;
+    // std::vector<std::string> messages;
+    //
+    // ftxui::InputOption input_option;
+    // input_option.on_enter = [&] {
+    //     if (!input_text.empty()) {
+    //         messages.push_back("Você " + input_text);
+    //         input_text.clear();
+    //     }
+    // };
+    //
+    // const ftxui::Component input = ftxui::Input(
+    //     &input_text,
+    //     "Digite sua mensagem...",
+    //     input_option
+    // );
+    //
+    // const ftxui::Component layout = ftxui::Renderer(input, [&] {
+    //     ftxui::Elements msg_elements;
+    //     for (const auto& msg : messages)
+    //         msg_elements.push_back(ftxui::text(msg));
+    //
+    //     return ftxui::window(
+    //         ftxui::text(" Conexão98 - Chat Local"),
+    //         ftxui::vbox({
+    //             ftxui::vbox(std::move(msg_elements)) | ftxui::flex,
+    //             ftxui::separator(),
+    //             input->Render()
+    //         })
+    //     );
+    // });
+    //
+    // auto screen = ftxui::ScreenInteractive::TerminalOutput();
+    // screen.Loop(layout);
+
+    try {
+        std::string ip, nick;
+        uint16_t port = 0;
+
+        if (argc == 1) {
+            ip = TerminalPrompter::askForIP();
+            port = TerminalPrompter::askForPort();
+            nick = TerminalPrompter::askForNickname();
+        } else {
+            std::cerr << "Uso: Inicie o programa sem argumentos para o modo interativo.\n";
+            return EXIT_FAILURE;
         }
-    };
 
-    const ftxui::Component input = ftxui::Input(
-        &input_text,
-        "Digite sua mensagem...",
-        input_option
-    );
+        ChatPresenter presenter([](const std::string&){});
 
-    const ftxui::Component layout = ftxui::Renderer(input, [&] {
-        ftxui::Elements msg_elements;
-        for (const auto& msg : messages)
-            msg_elements.push_back(ftxui::text(msg));
+        auto tuiListener = std::make_unique<TUIListener>(presenter);
+        auto tuiLoop = std::make_unique<TUIChatLoop>(presenter);
 
-        return ftxui::window(
-            ftxui::text(" Conexão98 - Chat Local"),
-            ftxui::vbox({
-                ftxui::vbox(std::move(msg_elements)) | ftxui::flex,
-                ftxui::separator(),
-                input->Render()
-            })
-        );
-    });
+        Conexao98ClientApp app(std::move(tuiListener), std::move(tuiLoop));
 
-    auto screen = ftxui::ScreenInteractive::TerminalOutput();
-    screen.Loop(layout);
+        if (app.init(ip, port, nick)) {
+            app.run();
+        } else {
+            std::cerr << "[CLIENT]: Falha ao conectar ao servidor.\n";
+        }
+
+    } catch (const Conexao98Exception& e) {
+        std::cerr << "[CLIENT] Erro fatal: " << e.what() << std::endl;
+    }
 
     return 0;
 }

@@ -22,7 +22,7 @@ void ConsoleChatListener::onMessageReceived(Connection &conn, const ByteArray &d
     }
 
     if (const auto it = printers.find(msg->getType()); it != printers.end()) {
-        it->second->handle(msg.get());
+        std::cout << it->second->format(msg.get()) << '\n';
     } else {
         Logger::getLogger().error("[CLIENT]: Message of unknown type received");
     }

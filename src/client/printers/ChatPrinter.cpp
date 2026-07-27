@@ -5,11 +5,11 @@
 #include "../../common/exceptions/ProtocolException.h"
 #include "../../protocol/messages/ChatMessage.h"
 
-void ChatPrinter::handle(Message *msg) {
+std::string ChatPrinter::format(Message *msg) const {
     const auto* chatMsg = dynamic_cast<ChatMessage*>(msg);
 
     if (chatMsg == nullptr)
         throw ProtocolException("ChatPrinter::handle received a non-ChatMessage instance");
 
-    std::cout << "[" << chatMsg->getNickname() << "]: " << chatMsg->getContent() << "\n";
+    return "[" + chatMsg->getNickname() + "]: " + chatMsg->getContent() + "\n";
 }

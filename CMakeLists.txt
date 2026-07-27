@@ -107,6 +107,13 @@ add_executable(client src/client/main/main.cpp
         src/client/ui/ChatView.h
         src/client/ui/ChatPresenter.cpp
         src/client/ui/ChatPresenter.h
+        src/client/main/IChatLoop.h
+        src/client/ConsoleChatLoop.cpp
+        src/client/ConsoleChatLoop.h
+        src/client/ui/TUIListener.cpp
+        src/client/ui/TUIListener.h
+        src/client/ui/TUIChatLoop.cpp
+        src/client/ui/TUIChatLoop.h
 )
 
 if (WIN32)

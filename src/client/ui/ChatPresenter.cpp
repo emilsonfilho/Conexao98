@@ -24,3 +24,11 @@ void ChatPresenter::addMessage(const std::string &message) {
         state.messages.push_back(message);
     });
 }
+
+void ChatPresenter::setOnSendMessage(const std::function<void(std::string)> &onSend) {
+    onSendMessage = onSend;
+}
+
+void ChatPresenter::close() {
+    screen.Exit();
+}

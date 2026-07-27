@@ -1,6 +1,7 @@
 #ifndef CONEXAO98_CONEXAO98CLIENTAPP_H
 #define CONEXAO98_CONEXAO98CLIENTAPP_H
 
+#include "IChatLoop.h"
 #include "../../network/NetworkClient.h"
 
 class Conexao98ClientApp {
@@ -9,14 +10,15 @@ private:
 
     std::unique_ptr<ConnectionListener> clientListener;
     std::unique_ptr<NetworkClient> client;
+    std::unique_ptr<IChatLoop> loop;
 
     bool isActive;
     bool isWSAInitialized;
 public:
-    Conexao98ClientApp();
+    Conexao98ClientApp(std::unique_ptr<ConnectionListener> listener, std::unique_ptr<IChatLoop> loop);
     ~Conexao98ClientApp();
 
-    bool init(const std::string& ip, uint16_t port);
+    bool init(const std::string& ip, uint16_t port, const std::string& nickname);
     void run();
     void stop();
 };

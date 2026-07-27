@@ -50,5 +50,7 @@ void Conexao98ClientApp::run() {
 void Conexao98ClientApp::stop() {
     isActive = false;
 
+    if (loop) loop->stop();
+
     std::cout << "Volte sempre!\n";
 }

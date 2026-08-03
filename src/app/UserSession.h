@@ -15,9 +15,9 @@ public:
     explicit UserSession(std::unique_ptr<Connection> conn);
 
     void setNickname(const std::string& nick);
-    std::string getNickname() const;
+    [[nodiscard]] std::string getNickname() const;
 
-    Connection& getConnection() const;
+    [[nodiscard]] Connection& getConnection() const;
 
     void send(Message* msg) const;
 };

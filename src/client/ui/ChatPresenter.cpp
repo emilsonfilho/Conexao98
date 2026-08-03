@@ -29,6 +29,14 @@ void ChatPresenter::setOnSendMessage(const std::function<void(std::string)> &onS
     onSendMessage = onSend;
 }
 
+void ChatPresenter::setOnlineUsers(const std::vector<std::string> &users) {
+    screen.Post([this, users] {
+        state.onlineUsers = users;
+    });
+
+    screen.PostEvent(ftxui::Event::Custom);
+}
+
 void ChatPresenter::close() {
     screen.Exit();
 }

@@ -1,6 +1,7 @@
 #include "ChatManager.h"
 
 #include "../common/logger/Logger.h"
+#include "../protocol/messages/SyncMessage.h"
 #include "handlers/ChatHandler.h"
 #include "handlers/JoinHandler.h"
 
@@ -73,10 +74,34 @@ void ChatManager::onIncomingConnection(Socket clientSock, sockaddr_in clientData
 void ChatManager::onDisconnected(Connection &conn) {
     const ConnectionId connId = conn.getId();
 
-    std::lock_guard<std::mutex> lock(sessionMutex);
-
-    if (const auto it = sessions.find(connId); it != sessions.end()) {
-        reaper.moveToGraveyard(std::move(it->second));
-        sessions.erase(it);
+    {
+        std::lock_guard<std::mutex> lock(sessionMutex);
+        if (const auto it = sessions.find(connId); it != sessions.end()) {
+            reaper.moveToGraveyard(std::move(it->second));
+            sessions.erase(it);
+        }
     }
+
+    const std::vector<std::string> userList = getActiveUsers();
+    SyncMessage syncMsg(userList);
+
+    withSessionsLock([&syncMsg](auto& activeSessions) -> void {
+        for (auto& [id, session] : activeSessions) {
+            if (session) session->send(&syncMsg);
+        }
+    });
+}
+
+std::vector<std::string> ChatManager::getActiveUsers() {
+    std::vector<std::string> activeUsers;
+
+    withSessionsLock([&activeUsers](const auto& sessions) -> void {
+        for (const auto& [id, session] : sessions) {
+            if (session and !session->getNickname().empty()) {
+                activeUsers.emplace_back(session->getNickname());
+            }
+        }
+    });
+
+    return activeUsers;
 }

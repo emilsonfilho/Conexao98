@@ -51,6 +51,8 @@ add_executable(server src/server/main.cpp
         src/common/logger/Logger.cpp
         src/common/logger/Logger.h
         src/common/logger/LogLevel.h
+        src/protocol/messages/SyncMessage.cpp
+        src/protocol/messages/SyncMessage.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -119,6 +121,8 @@ add_executable(client src/client/main/main.cpp
         src/client/commands/ExitCommand.h
         src/client/commands/CommandDispatcher.cpp
         src/client/commands/CommandDispatcher.h
+        src/protocol/messages/SyncMessage.cpp
+        src/protocol/messages/SyncMessage.h
 )
 
 if (WIN32)

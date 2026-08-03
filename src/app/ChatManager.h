@@ -38,6 +38,8 @@ public:
     void onMessageReceived(Connection &conn, const ByteArray &data) override;
     void onIncomingConnection(Socket clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
+
+    std::vector<std::string> getActiveUsers();
 };
 
 

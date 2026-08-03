@@ -3,6 +3,7 @@
 #include "../../common/logger/Logger.h"
 #include "../../protocol/Message.h"
 #include "../../protocol/MessageFactory.h"
+#include "../../protocol/messages/SyncMessage.h"
 #include "../printers/ChatPrinter.h"
 #include "../printers/JoinPrinter.h"
 
@@ -16,6 +17,13 @@ void TUIListener::onMessageReceived(Connection &conn, const ByteArray &data) {
 
     if (!msg) {
         Logger::getLogger().error("[CLIENT]: Malformed or unknown message payload received.");
+        return;
+    }
+
+    if (msg->getType() == MessageType::SYNC) {
+        if (const auto* syncMsg = static_cast<SyncMessage*>(msg.get()))
+            presenter.setOnlineUsers(syncMsg->getOnlineUsers());
+
         return;
     }
 

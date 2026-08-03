@@ -5,7 +5,8 @@
 
 enum class MessageType : uint8_t {
     JOIN,
-    CHAT
+    CHAT,
+    SYNC
 };
 
 #endif //CONEXAO98_MESSAGETYPE_H

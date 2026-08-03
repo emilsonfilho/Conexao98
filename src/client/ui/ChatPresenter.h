@@ -19,6 +19,7 @@ public:
     void addMessage(const std::string& message);
 
     void setOnSendMessage(const std::function<void(std::string)> &onSendMessage);
+    void setOnlineUsers(const std::vector<std::string> &users);
     void close();
 };
 

@@ -6,6 +6,7 @@
 
 struct ChatState {
     std::vector<std::string> messages;
+    std::vector<std::string> onlineUsers;
     std::string currentInput;
 };
 

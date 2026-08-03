@@ -14,12 +14,31 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
         for (const auto& msg : state.messages)
             msgElements.push_back(ftxui::text(msg));
 
+        ftxui::Elements userElements;
+        for (const auto& user : state.onlineUsers)
+            userElements.push_back(ftxui::text(". " + user) | ftxui::color(ftxui::Color::GreenLight));
+
+        if (userElements.empty())
+            userElements.push_back(ftxui::text("Só você por aqui...") | ftxui::dim);
+
         return ftxui::window(
             ftxui::text(" Conexão98 "),
-            ftxui::vbox({
-                ftxui::vbox(std::move(msgElements)) | ftxui::flex,
+            ftxui::hbox({
+                // Lado Esquerdo: Chat e Input
+                ftxui::vbox({
+                    ftxui::vbox(std::move(msgElements)) | ftxui::flex,
+                    ftxui::separator(),
+                    input->Render()
+                }) | ftxui::flex,
+
                 ftxui::separator(),
-                input->Render()
+
+                // Lado Direito: Usuários Online
+                ftxui::vbox({
+                    ftxui::text(" Online ") | ftxui::center | ftxui::bold,
+                    ftxui::separator(),
+                    ftxui::vbox(std::move(userElements)) | ftxui::yflex
+                }) | ftxui::size(ftxui::WIDTH, ftxui::GREATER_THAN, 20)
             })
         );
     });

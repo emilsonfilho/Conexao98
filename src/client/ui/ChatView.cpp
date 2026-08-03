@@ -3,6 +3,18 @@
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/component_options.hpp"
 
+ftxui::Color ChatView::getFtxuiColor(UserColor c) {
+    switch (c) {
+        case UserColor::RED: return ftxui::Color::RedLight;
+        case UserColor::GREEN: return ftxui::Color::GreenLight;
+        case UserColor::BLUE: return ftxui::Color::BlueLight;
+        case UserColor::YELLOW: return ftxui::Color::YellowLight;
+        case UserColor::CYAN: return ftxui::Color::CyanLight;
+        case UserColor::MAGENTA: return ftxui::Color::MagentaLight;
+        default: return ftxui::Color::White;
+    }
+}
+
 ftxui::Component ChatView::create(ChatState &state, const std::function<void()> &onEnter) {
     ftxui::InputOption inputOption;
     inputOption.on_enter = onEnter;
@@ -11,12 +23,19 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
 
     return ftxui::Renderer(input, [&state, input] {
         ftxui::Elements msgElements;
-        for (const auto& msg : state.messages)
-            msgElements.push_back(ftxui::text(msg));
+        for (const auto& [author, text, color] : state.messages)
+            msgElements.push_back(
+                ftxui::hbox({
+                    ftxui::text("[ " + author + " ]: ") | ftxui::color(getFtxuiColor(color)) | ftxui::bold,
+                    ftxui::text(text)
+                })
+            );
 
         ftxui::Elements userElements;
-        for (const auto& user : state.onlineUsers)
-            userElements.push_back(ftxui::text(". " + user) | ftxui::color(ftxui::Color::GreenLight));
+        for (const auto& [user, color] : state.onlineUsers)
+            userElements.push_back(
+                ftxui::text(". " + user) | ftxui::color(getFtxuiColor(color))
+            );
 
         if (userElements.empty())
             userElements.push_back(ftxui::text("Só você por aqui...") | ftxui::dim);

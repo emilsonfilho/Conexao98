@@ -3,6 +3,7 @@
 
 #include "IChatLoop.h"
 #include "../../network/NetworkClient.h"
+#include "../../protocol/UserColor.h"
 #include "../commands/CommandDispatcher.h"
 
 class Conexao98ClientApp {
@@ -21,7 +22,7 @@ public:
     Conexao98ClientApp(std::unique_ptr<ConnectionListener> listener, std::unique_ptr<IChatLoop> loop);
     ~Conexao98ClientApp();
 
-    bool init(const std::string& ip, uint16_t port, const std::string& nickname);
+    bool init(const std::string& ip, uint16_t port, const std::string& nickname, UserColor color);
     void run();
     void stop();
 };

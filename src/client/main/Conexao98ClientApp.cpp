@@ -19,7 +19,7 @@ Conexao98ClientApp::~Conexao98ClientApp() {
     if (isWSAInitialized) SocketHelper::cleanupSystem();
 }
 
-bool Conexao98ClientApp::init(const std::string& ip, uint16_t port, const std::string& nickname) {
+bool Conexao98ClientApp::init(const std::string& ip, uint16_t port, const std::string& nickname, UserColor color) {
     try {
        if (!SocketHelper::initSystem())
             throw SystemException("Network initialization failed.");
@@ -29,7 +29,7 @@ bool Conexao98ClientApp::init(const std::string& ip, uint16_t port, const std::s
         this->nickname = nickname;
         client->connectToServer(ip, port);
 
-        JoinMessage joinMsg(nickname);
+        JoinMessage joinMsg(nickname, color);
         client->sendMessage(&joinMsg);
 
         isActive = true;

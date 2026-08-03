@@ -16,10 +16,10 @@ public:
 
     void show();
 
-    void addMessage(const std::string& message);
+    void addMessage(const std::string& author, const std::string& text, UserColor color);
 
     void setOnSendMessage(const std::function<void(std::string)> &onSendMessage);
-    void setOnlineUsers(const std::vector<std::string> &users);
+    void setOnlineUsers(const std::vector<std::pair<std::string, UserColor>> &users);
     void close();
 };
 

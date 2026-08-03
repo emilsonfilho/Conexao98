@@ -10,6 +10,14 @@ std::string UserSession::getNickname() const {
     return nickname;
 }
 
+void UserSession::setColor(UserColor c) {
+    color = c;
+}
+
+UserColor UserSession::getColor() const {
+    return color;
+}
+
 Connection& UserSession::getConnection() const {
     return *conn;
 }

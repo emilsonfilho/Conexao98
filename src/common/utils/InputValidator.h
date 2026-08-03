@@ -22,8 +22,16 @@ public:
         OutOfRange
     };
 
+    enum class ColorError {
+        None,
+        Empty,
+        InvalidNumber,
+        OutOfRange
+    };
+
     static NicknameError validateNickname(const std::string& nick);
     static PortError validatePort(const std::string& input, uint16_t& outPort);
+    static ColorError validateColor(const std::string& input, uint16_t& outColor);
     static bool isValidIPv4(const std::string& ip);
 };
 

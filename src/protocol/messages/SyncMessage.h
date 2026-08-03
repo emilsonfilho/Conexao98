@@ -6,17 +6,18 @@
 #define CONEXAO98_SYNCMESSAGE_H
 
 #include "../Message.h"
+#include "../UserColor.h"
 
 class SyncMessage : public Message {
 private:
-    std::vector<std::string> onlineUsers;
+    std::vector<std::pair<std::string, UserColor>> onlineUsers;
 public:
-    explicit SyncMessage(const std::vector<std::string>& onlineUsers);
+    explicit SyncMessage(const std::vector<std::pair<std::string, UserColor>>& onlineUsers);
 
     MessageType getType() override;
     ByteArray serialize() override;
 
-    [[nodiscard]] const std::vector<std::string>& getOnlineUsers() const;
+    [[nodiscard]] const std::vector<std::pair<std::string, UserColor>>& getOnlineUsers() const;
 };
 
 

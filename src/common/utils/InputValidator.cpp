@@ -4,6 +4,8 @@
 #include <ws2tcpip.h>
 #include <psdk_inc/_ip_types.h>
 
+#include "../../protocol/UserColor.h"
+
 InputValidator::NicknameError InputValidator::validateNickname(const std::string &nick) {
     if (nick.empty()) return NicknameError::Empty;
 
@@ -39,6 +41,28 @@ InputValidator::PortError InputValidator::validatePort(const std::string &input,
 
     outPort = static_cast<uint16_t>(port);
     return PortError::None;
+}
+
+InputValidator::ColorError InputValidator::validateColor(const std::string &input, uint16_t &outColor) {
+    if (input.empty())
+        return ColorError::Empty;
+
+    int color = 0;
+    std::size_t pos = 0;
+
+    try {
+        color = std::stoi(input, &pos);
+    } catch (const std::exception& e) {
+        return ColorError::InvalidNumber;
+    }
+
+    if (pos != input.size()) return ColorError::InvalidNumber;
+
+    if (color < 1 or color > COLOR_UPPER_BOUND)
+        return ColorError::OutOfRange;
+
+    outColor = static_cast<uint16_t>(color);
+    return ColorError::None;
 }
 
 bool InputValidator::isValidIPv4(const std::string &ip) {

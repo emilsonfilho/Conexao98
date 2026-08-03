@@ -40,6 +40,20 @@ std::string TerminalPrompter::getMessage(InputValidator::PortError error) {
     return "Erro desconhecido.";
 }
 
+std::string TerminalPrompter::getMessage(InputValidator::ColorError error) {
+    switch (error) {
+        case InputValidator::ColorError::Empty:
+            return "A escolha não pode estar vazia.";
+        case InputValidator::ColorError::InvalidNumber:
+            return "Por favor, digite apenas números.";
+        case InputValidator::ColorError::OutOfRange:
+            return "Opção inválida. Escolha um número de 1 a 6.";
+        case InputValidator::ColorError::None:
+            return "";
+    }
+    return "Erro desconhecido.";
+}
+
 std::string TerminalPrompter::askForIP() {
     std::string ip;
 
@@ -89,5 +103,31 @@ std::string TerminalPrompter::askForNickname() {
 
         std::cout << getMessage(error) << '\n'
                   << "Vamos tentar novamente: ";
+    } while (true);
+}
+
+UserColor TerminalPrompter::askForColor() {
+    std::string input;
+    uint16_t colorId = 0;
+
+    // \033[XXm inicia a cor
+    // \033[0m reseta a cor para o padrão do terminal
+    std::cout << "\nEscolha uma cor para o seu perfil:\n"
+              << "[1] \033[91mVermelho\033[0m\n"
+              << "[2] \033[92mVerde\033[0m\n"
+              << "[3] \033[94mAzul\033[0m\n"
+              << "[4] \033[93mAmarelo\033[0m\n"
+              << "[5] \033[96mCiano\033[0m\n"
+              << "[6] \033[95mMagenta\033[0m\n"
+              << "Digite o numero da sua cor: ";
+    do {
+        std::getline(std::cin, input);
+        const auto error = InputValidator::validateColor(input, colorId);
+
+        if (error == InputValidator::ColorError::None)
+            return static_cast<UserColor>(colorId);
+
+        std::cout << getMessage(error) << '\n'
+                  << "Digite o numero da sua cor (1-6): ";
     } while (true);
 }

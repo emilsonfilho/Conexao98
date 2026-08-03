@@ -11,7 +11,7 @@ void ChatPresenter::show() {
     const auto component = ChatView::create(state, [this] {
         if (!state.currentInput.empty()) {
             onSendMessage(state.currentInput);
-            state.messages.push_back("[Você]: " + state.currentInput);
+            state.messages.push_back({ "Você", state.currentInput, UserColor::DEFAULT });
             state.currentInput.clear();
         }
     });
@@ -19,17 +19,19 @@ void ChatPresenter::show() {
     screen.Loop(component);
 }
 
-void ChatPresenter::addMessage(const std::string &message) {
-    screen.Post([this, message] {
-        state.messages.push_back(message);
+void ChatPresenter::addMessage(const std::string &author, const std::string& text, UserColor color) {
+    screen.Post([this, author, text, color] {
+        state.messages.push_back({ author, text, color });
     });
+
+    screen.PostEvent(ftxui::Event::Custom);
 }
 
 void ChatPresenter::setOnSendMessage(const std::function<void(std::string)> &onSend) {
     onSendMessage = onSend;
 }
 
-void ChatPresenter::setOnlineUsers(const std::vector<std::string> &users) {
+void ChatPresenter::setOnlineUsers(const std::vector<std::pair<std::string, UserColor>> &users) {
     screen.Post([this, users] {
         state.onlineUsers = users;
     });

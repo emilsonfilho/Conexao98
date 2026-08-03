@@ -39,7 +39,7 @@ public:
     void onIncomingConnection(Socket clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
 
-    std::vector<std::string> getActiveUsers();
+    std::vector<std::pair<std::string, UserColor>> getActiveUsers();
 };
 
 

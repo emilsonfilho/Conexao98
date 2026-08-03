@@ -1,12 +1,21 @@
 #ifndef CONEXAO98_CHATSTATE_H
 #define CONEXAO98_CHATSTATE_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
+#include "../../protocol/UserColor.h"
+
 struct ChatState {
-    std::vector<std::string> messages;
-    std::vector<std::string> onlineUsers;
+    struct DisplayMessage {
+        std::string author;
+        std::string text;
+        UserColor color;
+    };
+
+    std::vector<DisplayMessage> messages;
+    std::vector<std::pair<std::string, UserColor>> onlineUsers;
     std::string currentInput;
 };
 

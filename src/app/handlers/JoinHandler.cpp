@@ -9,12 +9,13 @@ void JoinHandler::handle(ChatManager *manager, UserSession& session, const std::
     if (joinMsg == nullptr) return;
 
     session.setNickname(joinMsg->getNickname());
+    session.setColor(joinMsg->getColor());
 
     manager->broadcast(joinMsg, session);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    const std::vector<std::string> userList = manager->getActiveUsers();
+    const std::vector<std::pair<std::string, UserColor>> userList = manager->getActiveUsers();
 
     SyncMessage syncMsg(userList);
     session.send(&syncMsg);

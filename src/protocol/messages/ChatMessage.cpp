@@ -3,8 +3,8 @@
 ChatMessage::ChatMessage(const std::string &content):
     senderNickname(""), content(content) {}
 
-ChatMessage::ChatMessage(const std::string &senderNickname, const std::string &content):
-    senderNickname(senderNickname), content(content) {}
+ChatMessage::ChatMessage(const std::string &senderNickname, const UserColor color, const std::string &content):
+    senderNickname(senderNickname), color(color), content(content) {}
 
 MessageType ChatMessage::getType() {
     return MessageType::CHAT;
@@ -13,9 +13,15 @@ MessageType ChatMessage::getType() {
 ByteArray ChatMessage::serialize() {
     ByteArray packet;
 
+    // Tipo
     const char type = static_cast<char>(getType());
     packet.write(&type, 1);
 
+    // Cor
+    const auto colorByte = static_cast<uint8_t>(color);
+    packet.write(&colorByte, 1);
+
+    // Dados
     const uint16_t nickSize = senderNickname.size();
     packet.write(&nickSize, sizeof(uint16_t));
 
@@ -33,4 +39,8 @@ std::string ChatMessage::getNickname() const {
 
 std::string ChatMessage::getContent() const {
     return content;
+}
+
+UserColor ChatMessage::getColor() const {
+    return color;
 }

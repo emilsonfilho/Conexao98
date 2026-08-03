@@ -84,11 +84,13 @@ int main(const int argc, char* argv[]) {
     try {
         std::string ip, nick;
         uint16_t port = 0;
+        UserColor color;
 
         if (argc == 1) {
             ip = TerminalPrompter::askForIP();
             port = TerminalPrompter::askForPort();
             nick = TerminalPrompter::askForNickname();
+            color = TerminalPrompter::askForColor();
         } else {
             std::cerr << "Uso: Inicie o programa sem argumentos para o modo interativo.\n";
             return EXIT_FAILURE;
@@ -101,7 +103,7 @@ int main(const int argc, char* argv[]) {
 
         Conexao98ClientApp app(std::move(tuiListener), std::move(tuiLoop));
 
-        if (app.init(ip, port, nick)) {
+        if (app.init(ip, port, nick, color)) {
             app.run();
         } else {
             std::cerr << "[CLIENT]: Falha ao conectar ao servidor.\n";

@@ -8,6 +8,7 @@
 
 
 class ChatView {
+    static ftxui::Color getFtxuiColor(UserColor c);
 public:
     static ftxui::Component create(ChatState& state, const std::function<void()> &onEnter);
 };

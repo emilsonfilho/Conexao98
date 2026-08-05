@@ -8,11 +8,14 @@
 #include <functional>
 #include <string>
 
+#include "../../protocol/UserColor.h"
+
 class IChatLoop {
 public:
     virtual ~IChatLoop() = default;
-    virtual void run(const std::function<void(const std::string&)>& onSend) = 0;
+    virtual void run(const std::function<void(const std::string&)>& onSend, const std::function<void(UserColor)>& onColorChange) = 0;
     virtual void stop() = 0;
+    virtual void showColorMenu() = 0;
 };
 
 #endif //CONEXAO98_ICHATLOOP_H

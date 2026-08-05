@@ -2,6 +2,7 @@
 
 #include "../common/logger/Logger.h"
 #include "../protocol/messages/SyncMessage.h"
+#include "handlers/ChangeColorHandler.h"
 #include "handlers/ChatHandler.h"
 #include "handlers/JoinHandler.h"
 
@@ -14,6 +15,11 @@ void ChatManager::initializeHandlers() {
     messageHandlers.emplace(
         MessageType::JOIN,
         std::make_unique<JoinHandler>()
+    );
+
+    messageHandlers.emplace(
+        MessageType::CHANGE_COLOR,
+        std::make_unique<ChangeColorHandler>()
     );
 }
 

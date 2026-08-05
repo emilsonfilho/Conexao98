@@ -14,6 +14,8 @@ void ChatPresenter::show() {
             state.messages.push_back({ "Você", state.currentInput, UserColor::DEFAULT });
             state.currentInput.clear();
         }
+    }, [this](UserColor newColor) {
+        if (onChangeColorCallback) onChangeColorCallback(newColor);
     });
 
     screen.Loop(component);
@@ -31,6 +33,10 @@ void ChatPresenter::setOnSendMessage(const std::function<void(std::string)> &onS
     onSendMessage = onSend;
 }
 
+void ChatPresenter::setOnChangeColor(const std::function<void(UserColor)> &onChangeColor) {
+    onChangeColorCallback = onChangeColor;
+}
+
 void ChatPresenter::setOnlineUsers(const std::vector<std::pair<std::string, UserColor>> &users) {
     screen.Post([this, users] {
         state.onlineUsers = users;
@@ -41,4 +47,12 @@ void ChatPresenter::setOnlineUsers(const std::vector<std::pair<std::string, User
 
 void ChatPresenter::close() {
     screen.Exit();
+}
+
+void ChatPresenter::showColorMenu() {
+    screen.Post([this] {
+        state.isColorMenuOpen = true;
+    });
+
+    screen.PostEvent(ftxui::Event::Custom);
 }

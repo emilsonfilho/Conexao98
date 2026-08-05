@@ -9,6 +9,7 @@
 #include "messages/ChatMessage.h"
 #include "messages/SyncMessage.h"
 #include "UserMetadata.h"
+#include "messages/ChangeColorMessage.h"
 
 std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
     char typeByte = data.data()[0];
@@ -64,6 +65,18 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
         }
 
         return std::make_unique<SyncMessage>(usersMetadata);
+    }
+
+    if (type == MessageType::CHANGE_COLOR) {
+        if (data.size() < 2) {
+            Logger::getLogger().error("Malformed ChangeColorMessage");
+            return nullptr;
+        }
+
+        const uint8_t colorByte = data.data()[1];
+        const auto color = static_cast<UserColor>(colorByte);
+
+        return std::make_unique<ChangeColorMessage>(color);
     }
 
     Logger::getLogger().error("No MessageType corresponding");

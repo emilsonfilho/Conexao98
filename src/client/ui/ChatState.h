@@ -17,6 +17,12 @@ struct ChatState {
     std::vector<DisplayMessage> messages;
     std::vector<std::pair<std::string, UserColor>> onlineUsers;
     std::string currentInput;
+
+    bool isColorMenuOpen = false;
+    int selectedColorIndex = 0;
+    std::vector<std::string> colorMenuEntries = {
+        "Vermelho", "Verde", "Azul", "Amarelo", "Ciano", "Magenta"
+    };
 };
 
 

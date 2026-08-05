@@ -25,6 +25,7 @@ public:
     bool init(const std::string& ip, uint16_t port, const std::string& nickname, UserColor color);
     void run();
     void stop();
+    void requestColorMenu() const;
 };
 
 

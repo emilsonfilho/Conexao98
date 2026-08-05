@@ -10,11 +10,13 @@
 class ConsoleChatLoop : public IChatLoop {
 private:
     bool isActive;
+    std::function<void(UserColor)> onColorChangeCallback;
 public:
     ConsoleChatLoop();
 
-    void run(const std::function<void(const std::string &)> &onSend) override;
+    void run(const std::function<void(const std::string &)> &onSend, const std::function<void(UserColor)>& onColorChange) override;
     void stop() override;
+    void showColorMenu() override;
 };
 
 

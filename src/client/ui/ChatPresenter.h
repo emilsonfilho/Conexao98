@@ -11,6 +11,7 @@ private:
     ChatState state;
     ftxui::ScreenInteractive screen;
     std::function<void(std::string)> onSendMessage;
+    std::function<void(UserColor)> onChangeColorCallback;
 public:
     explicit ChatPresenter(std::function<void(std::string)> onSend);
 
@@ -19,8 +20,10 @@ public:
     void addMessage(const std::string& author, const std::string& text, UserColor color);
 
     void setOnSendMessage(const std::function<void(std::string)> &onSendMessage);
+    void setOnChangeColor(const std::function<void(UserColor)> &onChangeColor);
     void setOnlineUsers(const std::vector<std::pair<std::string, UserColor>> &users);
     void close();
+    void showColorMenu();
 };
 
 

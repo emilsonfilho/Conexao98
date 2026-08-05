@@ -15,13 +15,40 @@ ftxui::Color ChatView::getFtxuiColor(UserColor c) {
     }
 }
 
-ftxui::Component ChatView::create(ChatState &state, const std::function<void()> &onEnter) {
+ftxui::Component ChatView::create(ChatState &state, const std::function<void()> &onEnter, const std::function<void(UserColor)>& onColorSelected) {
     ftxui::InputOption inputOption;
     inputOption.on_enter = onEnter;
 
     const auto input = ftxui::Input(&state.currentInput, "Digite sua mensagem....", inputOption);
+    auto radiobox = ftxui::Radiobox(&state.colorMenuEntries, &state.selectedColorIndex);
 
-    return ftxui::Renderer(input, [&state, input] {
+    // Modal
+    auto btnConfirm = ftxui::Button("Confirmar", [&state, onColorSelected] {
+        state.isColorMenuOpen = false;
+        onColorSelected(static_cast<UserColor>(state.selectedColorIndex + 1));
+    }, ftxui::ButtonOption::Animated(ftxui::Color::Green));
+
+    auto btnCancel = ftxui::Button("Cancelar", [&state] {
+        state.isColorMenuOpen = false;
+    }, ftxui::ButtonOption::Animated(ftxui::Color::Red));
+
+    const auto modalContainer = ftxui::Container::Vertical({
+        radiobox,
+        ftxui::Container::Horizontal({btnConfirm, btnCancel})
+    });
+
+    const auto modalRenderer = ftxui::Renderer(modalContainer, [radiobox, btnConfirm, btnCancel] {
+        return ftxui::vbox({
+            ftxui::text(" Escolha sua nova cor: ") | ftxui::bold | ftxui::center,
+            ftxui::separator(),
+            radiobox->Render(),
+            ftxui::separator(),
+            ftxui::hbox({btnConfirm->Render(), ftxui::text("  "), btnCancel->Render()}) | ftxui::center
+        }) | ftxui::border | ftxui::clear_under | ftxui::center; // clear_under apaga o que estiver atrás!
+    });
+
+    // Layout
+    auto mainLayout = ftxui::Renderer(input, [&state, input] {
         ftxui::Elements msgElements;
         for (const auto& [author, text, color] : state.messages)
             msgElements.push_back(
@@ -61,4 +88,8 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
             })
         );
     });
+
+    mainLayout |= ftxui::Modal(modalRenderer, &state.isColorMenuOpen);
+
+    return mainLayout;
 }

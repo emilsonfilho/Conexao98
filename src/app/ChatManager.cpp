@@ -82,7 +82,7 @@ void ChatManager::onDisconnected(Connection &conn) {
         }
     }
 
-    const std::vector<std::pair<std::string, UserColor>> userList = getActiveUsers();
+    const std::vector<UserMetadata> userList = getActiveUsers();
     SyncMessage syncMsg(userList);
 
     withSessionsLock([&syncMsg](auto& activeSessions) -> void {
@@ -92,8 +92,8 @@ void ChatManager::onDisconnected(Connection &conn) {
     });
 }
 
-std::vector<std::pair<std::string, UserColor>> ChatManager::getActiveUsers() {
-    std::vector<std::pair<std::string, UserColor>> activeUsers;
+std::vector<UserMetadata> ChatManager::getActiveUsers() {
+    std::vector<UserMetadata> activeUsers;
 
     withSessionsLock([&activeUsers](const auto& sessions) -> void {
         for (const auto& [id, session] : sessions) {

@@ -15,7 +15,7 @@ void JoinHandler::handle(ChatManager *manager, UserSession& session, const std::
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    const std::vector<std::pair<std::string, UserColor>> userList = manager->getActiveUsers();
+    const std::vector<UserMetadata> userList = manager->getActiveUsers();
 
     SyncMessage syncMsg(userList);
     session.send(&syncMsg);

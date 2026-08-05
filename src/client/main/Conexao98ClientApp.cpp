@@ -29,7 +29,7 @@ bool Conexao98ClientApp::init(const std::string& ip, uint16_t port, const std::s
         this->nickname = nickname;
         client->connectToServer(ip, port);
 
-        JoinMessage joinMsg(nickname, color);
+        JoinMessage joinMsg(UserMetadata(nickname, color));
         client->sendMessage(&joinMsg);
 
         isActive = true;

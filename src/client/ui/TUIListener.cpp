@@ -21,8 +21,17 @@ void TUIListener::onMessageReceived(Connection &conn, const ByteArray &data) {
     }
 
     if (msg->getType() == MessageType::SYNC) {
-        if (const auto* syncMsg = static_cast<SyncMessage*>(msg.get()))
-            presenter.setOnlineUsers(syncMsg->getOnlineUsers());
+        if (const auto* syncMsg = static_cast<SyncMessage*>(msg.get())) {
+            std::vector<std::pair<std::string, UserColor>> uiUsers;
+
+            for (const auto& meta : syncMsg->getOnlineUsers()) {
+                uiUsers.emplace_back(
+                    meta.getString(UserAttr::NICKNAME),
+                    meta.getColor(UserAttr::COLOR)
+                );
+            }
+            presenter.setOnlineUsers(uiUsers);
+        }
 
         return;
     }

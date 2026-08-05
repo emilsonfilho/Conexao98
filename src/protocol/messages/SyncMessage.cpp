@@ -4,7 +4,7 @@
 
 #include "SyncMessage.h"
 
-SyncMessage::SyncMessage(const std::vector<std::pair<std::string, UserColor>>& onlineUsers)
+SyncMessage::SyncMessage(const std::vector<UserMetadata>& onlineUsers)
     : onlineUsers(onlineUsers) {}
 
 MessageType SyncMessage::getType() {
@@ -20,22 +20,16 @@ ByteArray SyncMessage::serialize() {
     const uint16_t userCount = onlineUsers.size();
     packet.write(&userCount, sizeof(uint16_t));
 
-    for (const auto& [userNickname, userColor] : onlineUsers) {
-        // Color
-        const uint8_t colorByte = static_cast<uint8_t>(userColor);
-        packet.write(&colorByte, 1);
+    for (const auto& metadata : onlineUsers) {
+        ByteArray metaBytes = metadata.serialize();
 
-        // Nickname
-        const uint16_t nickSize = userNickname.size();
-        packet.write(&nickSize, sizeof(uint16_t));
-
-        if (nickSize > 0)
-            packet.write(userNickname.data(), nickSize);
+        if (metaBytes.size() > 0)
+            packet.write(metaBytes.data(), metaBytes.size());
     }
 
     return packet;
 }
 
-const std::vector<std::pair<std::string, UserColor>>& SyncMessage::getOnlineUsers() const {
+const std::vector<UserMetadata>& SyncMessage::getOnlineUsers() const {
     return onlineUsers;
 }

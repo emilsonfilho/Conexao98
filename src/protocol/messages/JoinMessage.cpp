@@ -1,6 +1,6 @@
 #include "JoinMessage.h"
 
-JoinMessage::JoinMessage(const std::string &nick, UserColor color): nickname(nick), color(color) {}
+JoinMessage::JoinMessage(const UserMetadata& meta): metadata(meta) {}
 
 MessageType JoinMessage::getType() {
     return MessageType::JOIN;
@@ -13,24 +13,18 @@ ByteArray JoinMessage::serialize() {
     const char type = static_cast<char>(getType());
     packet.write(&type, 1);
 
-    // Cor
-    const uint8_t colorByte = static_cast<uint8_t>(getColor());
-    packet.write(&colorByte, 1);
+    ByteArray metaBytes = metadata.serialize();
 
-    // Tamanho do nick e texto
-    const uint16_t nickSize = getNickname().size();
-    packet.write(&nickSize, sizeof(uint16_t));
-
-    if (nickSize > 0)
-        packet.write(nickname.data(), nickSize);
+    if (metaBytes.size() > 0)
+        packet.write(metaBytes.data(), metaBytes.size());
 
     return packet;
 }
 
 std::string JoinMessage::getNickname() const {
-    return nickname;
+    return metadata.getString(UserAttr::NICKNAME);
 }
 
 UserColor JoinMessage::getColor() const {
-    return color;
+    return metadata.getColor(UserAttr::COLOR);
 }

@@ -1,10 +1,10 @@
 #include "ChatMessage.h"
 
 ChatMessage::ChatMessage(const std::string &content):
-    senderNickname(""), content(content) {}
+    metadata(UserMetadata()), content(content) {}
 
-ChatMessage::ChatMessage(const std::string &senderNickname, const UserColor color, const std::string &content):
-    senderNickname(senderNickname), color(color), content(content) {}
+ChatMessage::ChatMessage(const UserMetadata& meta, const std::string &content):
+    metadata(meta), content(content) {}
 
 MessageType ChatMessage::getType() {
     return MessageType::CHAT;
@@ -13,20 +13,12 @@ MessageType ChatMessage::getType() {
 ByteArray ChatMessage::serialize() {
     ByteArray packet;
 
-    // Tipo
     const char type = static_cast<char>(getType());
     packet.write(&type, 1);
 
-    // Cor
-    const auto colorByte = static_cast<uint8_t>(color);
-    packet.write(&colorByte, 1);
-
-    // Dados
-    const uint16_t nickSize = senderNickname.size();
-    packet.write(&nickSize, sizeof(uint16_t));
-
-    if (nickSize > 0)
-        packet.write(senderNickname.data(), nickSize);
+    ByteArray metaBytes = metadata.serialize();
+    if (metaBytes.size() > 0)
+        packet.write(metaBytes.data(), metaBytes.size());
 
     packet.write(content.data(), content.size());
 
@@ -34,7 +26,7 @@ ByteArray ChatMessage::serialize() {
 }
 
 std::string ChatMessage::getNickname() const {
-    return senderNickname;
+    return metadata.getString(UserAttr::NICKNAME);
 }
 
 std::string ChatMessage::getContent() const {
@@ -42,5 +34,5 @@ std::string ChatMessage::getContent() const {
 }
 
 UserColor ChatMessage::getColor() const {
-    return color;
+    return metadata.getColor(UserAttr::COLOR);
 }

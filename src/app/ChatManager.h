@@ -12,6 +12,7 @@
 #include "../network/ConnectionListener.h"
 #include "../network/ServerListener.h"
 #include "../protocol/MessageFactory.h"
+#include "../protocol/UserMetadata.h"
 #include "handlers/MessageHandler.h"
 
 class ChatManager : public ConnectionListener, public ServerListener {
@@ -39,7 +40,7 @@ public:
     void onIncomingConnection(Socket clientSock, sockaddr_in clientData) override;
     void onDisconnected(Connection &conn) override;
 
-    std::vector<std::pair<std::string, UserColor>> getActiveUsers();
+    std::vector<UserMetadata> getActiveUsers();
 };
 
 

@@ -15,7 +15,7 @@ void ChatHandler::handle(ChatManager *manager, UserSession& session, const std::
     const UserColor color = session.getColor();
     const std::string content = chatMsg->getContent();
 
-    ChatMessage finalMsg(nick, color, content); // com certeza, finalMsg tem o nickname
+    ChatMessage finalMsg(UserMetadata(nick, color), content); // com certeza, finalMsg tem o nickname
 
     manager->broadcast(&finalMsg, session);
 }

@@ -54,6 +54,8 @@ add_executable(server src/server/main.cpp
         src/protocol/messages/SyncMessage.cpp
         src/protocol/messages/SyncMessage.h
         src/protocol/UserColor.h
+        src/protocol/UserMetadata.h
+        src/protocol/UserMetadata.cpp
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -125,6 +127,8 @@ add_executable(client src/client/main/main.cpp
         src/protocol/messages/SyncMessage.cpp
         src/protocol/messages/SyncMessage.h
         src/protocol/UserColor.h
+        src/protocol/UserMetadata.h
+        src/protocol/UserMetadata.cpp
 )
 
 if (WIN32)

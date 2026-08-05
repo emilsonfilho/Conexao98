@@ -3,13 +3,13 @@
 
 #include "../Message.h"
 #include "../UserColor.h"
+#include "../UserMetadata.h"
 
 class JoinMessage : public Message {
 private:
-    std::string nickname;
-    UserColor color;
+    UserMetadata metadata;
 public:
-    explicit JoinMessage(const std::string& nick, UserColor color);
+    explicit JoinMessage(const UserMetadata& meta);
 
     MessageType getType() override;
     ByteArray serialize() override;

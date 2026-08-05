@@ -8,6 +8,7 @@
 #include "messages/JoinMessage.h"
 #include "messages/ChatMessage.h"
 #include "messages/SyncMessage.h"
+#include "UserMetadata.h"
 
 std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
     char typeByte = data.data()[0];
@@ -19,15 +20,10 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
             return nullptr;
         }
 
-        const uint8_t colorByte = data.data()[1];
-        const auto color = static_cast<UserColor>(colorByte);
+        size_t bytesRead = 0;
+        UserMetadata meta = UserMetadata::deserialize(data.data() + 1, data.size() - 1, bytesRead);
 
-        uint16_t nickSize;
-        std::memcpy(&nickSize, data.data() + 2, sizeof(uint16_t));
-
-        const std::string nick(data.data() + 4, nickSize);
-
-        return std::make_unique<JoinMessage>(nick, color);
+        return std::make_unique<JoinMessage>(meta);
     }
 
     if (type == MessageType::CHAT) {
@@ -36,18 +32,13 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
             return nullptr;
         }
 
-        const uint8_t colorByte = data.data()[1];
-        const auto color = static_cast<UserColor>(colorByte);
+        size_t bytesRead = 0;
+        UserMetadata meta = UserMetadata::deserialize(data.data() + 1, data.size() - 1, bytesRead);
 
-        uint16_t nickSize;
-        std::memcpy(&nickSize, data.data() + 2, sizeof(uint16_t));
-
-        const std::string nick(data.data() + 4, nickSize);
-
-        const size_t textStart = 4 + nickSize;
+        const size_t textStart = bytesRead + 1;
         const std::string text(data.data() + textStart, data.size() - textStart);
 
-        return std::make_unique<ChatMessage>(nick, color, text);
+        return std::make_unique<ChatMessage>(meta, text);
     }
 
     if (type == MessageType::SYNC) {
@@ -62,26 +53,17 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
         std::memcpy(&userCount, data.data() + offset, sizeof(uint16_t));
         offset += sizeof(uint16_t);
 
-        std::vector<std::pair<std::string, UserColor>> users;
+        std::vector<UserMetadata> usersMetadata;
 
         for (uint16_t i = 0; i < userCount; i++) {
-            // Cor
-            const uint8_t colorByte = data.data()[offset];
-            const auto color = static_cast<UserColor>(colorByte);
-            offset++;
-
-            // Nickname
-            uint16_t nickSize;
-            std::memcpy(&nickSize, data.data() + offset, sizeof(uint16_t));
-            offset += sizeof(uint16_t);
-
-            std::string user(data.data() + offset, nickSize);
-            users.emplace_back(user, color);
-
-            offset += nickSize;
+            size_t bytesRead = 0;
+            usersMetadata.push_back(
+                UserMetadata::deserialize(data.data() + offset, data.size() - offset, bytesRead)
+            );
+            offset += bytesRead;
         }
 
-        return std::make_unique<SyncMessage>(users);
+        return std::make_unique<SyncMessage>(usersMetadata);
     }
 
     Logger::getLogger().error("No MessageType corresponding");

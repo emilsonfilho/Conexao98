@@ -6,24 +6,19 @@
 
 #include "../network/Connection.h"
 #include "../protocol/Message.h"
-#include "../protocol/UserColor.h"
+#include "../protocol/UserMetadata.h"
 
 class UserSession {
 private:
     std::unique_ptr<Connection> conn;
-    std::string nickname;
-    UserColor color;
+    UserMetadata profile;
 public:
     explicit UserSession(std::unique_ptr<Connection> conn);
 
-    void setNickname(const std::string& nick);
-    [[nodiscard]] std::string getNickname() const;
-
-    void setColor(UserColor c);
-    UserColor getColor() const;
+    void setProfile(const UserMetadata& meta);
+    const UserMetadata& getProfile() const;
 
     [[nodiscard]] Connection& getConnection() const;
-
     void send(Message* msg) const;
 };
 

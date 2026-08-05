@@ -14,8 +14,7 @@ public:
     MessageType getType() override;
     ByteArray serialize() override;
 
-    std::string getNickname() const;
-    UserColor getColor() const;
+    const UserMetadata& getMetadata() const;
 };
 
 

@@ -21,10 +21,6 @@ ByteArray JoinMessage::serialize() {
     return packet;
 }
 
-std::string JoinMessage::getNickname() const {
-    return metadata.getString(UserAttr::NICKNAME);
-}
-
-UserColor JoinMessage::getColor() const {
-    return metadata.getColor(UserAttr::COLOR);
+const UserMetadata& JoinMessage::getMetadata() const {
+    return metadata;
 }

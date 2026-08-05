@@ -2,20 +2,12 @@
 
 UserSession::UserSession(std::unique_ptr<Connection> conn) : conn(std::move(conn)) {}
 
-void UserSession::setNickname(const std::string& nick) {
-    nickname = nick;
+void UserSession::setProfile(const UserMetadata &meta) {
+    profile = meta;
 }
 
-std::string UserSession::getNickname() const {
-    return nickname;
-}
-
-void UserSession::setColor(UserColor c) {
-    color = c;
-}
-
-UserColor UserSession::getColor() const {
-    return color;
+const UserMetadata &UserSession::getProfile() const {
+    return profile;
 }
 
 Connection& UserSession::getConnection() const {

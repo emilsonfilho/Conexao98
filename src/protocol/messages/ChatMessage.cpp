@@ -25,14 +25,10 @@ ByteArray ChatMessage::serialize() {
     return packet;
 }
 
-std::string ChatMessage::getNickname() const {
-    return metadata.getString(UserAttr::NICKNAME);
+const UserMetadata& ChatMessage::getMetadata() const {
+    return metadata;
 }
 
 std::string ChatMessage::getContent() const {
     return content;
-}
-
-UserColor ChatMessage::getColor() const {
-    return metadata.getColor(UserAttr::COLOR);
 }

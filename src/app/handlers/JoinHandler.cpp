@@ -8,8 +8,7 @@ void JoinHandler::handle(ChatManager *manager, UserSession& session, const std::
     const auto joinMsg = static_cast<JoinMessage*>(msg.get());
     if (joinMsg == nullptr) return;
 
-    session.setNickname(joinMsg->getNickname());
-    session.setColor(joinMsg->getColor());
+    session.setProfile(joinMsg->getMetadata());
 
     manager->broadcast(joinMsg, session);
 

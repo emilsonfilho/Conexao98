@@ -97,8 +97,10 @@ std::vector<UserMetadata> ChatManager::getActiveUsers() {
 
     withSessionsLock([&activeUsers](const auto& sessions) -> void {
         for (const auto& [id, session] : sessions) {
-            if (session and !session->getNickname().empty()) {
-                activeUsers.emplace_back(session->getNickname(), session->getColor());
+            if (session) {
+                if (const UserMetadata& profile = session->getProfile(); !profile.getString(UserAttr::NICKNAME).empty()) {
+                    activeUsers.push_back(profile);
+                }
             }
         }
     });

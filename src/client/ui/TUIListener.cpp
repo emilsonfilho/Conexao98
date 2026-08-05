@@ -37,8 +37,10 @@ void TUIListener::onMessageReceived(Connection &conn, const ByteArray &data) {
     }
 
     if (msg->getType() == MessageType::CHAT) {
-        if (const auto* chatMsg = static_cast<ChatMessage*>(msg.get()))
-            presenter.addMessage(chatMsg->getNickname(), chatMsg->getContent(), chatMsg->getColor());
+        if (const auto* chatMsg = static_cast<ChatMessage*>(msg.get())) {
+            UserMetadata meta = chatMsg->getMetadata();
+            presenter.addMessage(meta.getString(UserAttr::NICKNAME), chatMsg->getContent(), meta.getColor(UserAttr::COLOR));
+        }
 
         return;
     }

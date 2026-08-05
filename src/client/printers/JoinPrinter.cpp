@@ -15,5 +15,5 @@ std::string JoinPrinter::format(Message *msg) const {
     if (!joinMsg)
         throw ProtocolException("JoinPrinter::handle received a non-JoinMessage instance");
 
-    return + ">>> " + joinMsg->getNickname() + " entrou no servidor! <<<\n";
+    return + ">>> " + joinMsg->getMetadata().getString(UserAttr::NICKNAME) + " entrou no servidor! <<<\n";
 }

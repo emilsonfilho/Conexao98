@@ -11,5 +11,5 @@ std::string ChatPrinter::format(Message *msg) const {
     if (chatMsg == nullptr)
         throw ProtocolException("ChatPrinter::handle received a non-ChatMessage instance");
 
-    return "[" + chatMsg->getNickname() + "]: " + chatMsg->getContent() + "\n";
+    return "[" + chatMsg->getMetadata().getString(UserAttr::NICKNAME) + "]: " + chatMsg->getContent() + "\n";
 }

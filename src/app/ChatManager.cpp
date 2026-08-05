@@ -1,6 +1,8 @@
 #include "ChatManager.h"
 
 #include "../common/logger/Logger.h"
+#include "../protocol/messages/SyncMessage.h"
+#include "handlers/ChangeColorHandler.h"
 #include "handlers/ChatHandler.h"
 #include "handlers/JoinHandler.h"
 
@@ -13,6 +15,11 @@ void ChatManager::initializeHandlers() {
     messageHandlers.emplace(
         MessageType::JOIN,
         std::make_unique<JoinHandler>()
+    );
+
+    messageHandlers.emplace(
+        MessageType::CHANGE_COLOR,
+        std::make_unique<ChangeColorHandler>()
     );
 }
 
@@ -73,10 +80,36 @@ void ChatManager::onIncomingConnection(Socket clientSock, sockaddr_in clientData
 void ChatManager::onDisconnected(Connection &conn) {
     const ConnectionId connId = conn.getId();
 
-    std::lock_guard<std::mutex> lock(sessionMutex);
-
-    if (const auto it = sessions.find(connId); it != sessions.end()) {
-        reaper.moveToGraveyard(std::move(it->second));
-        sessions.erase(it);
+    {
+        std::lock_guard<std::mutex> lock(sessionMutex);
+        if (const auto it = sessions.find(connId); it != sessions.end()) {
+            reaper.moveToGraveyard(std::move(it->second));
+            sessions.erase(it);
+        }
     }
+
+    const std::vector<UserMetadata> userList = getActiveUsers();
+    SyncMessage syncMsg(userList);
+
+    withSessionsLock([&syncMsg](auto& activeSessions) -> void {
+        for (auto& [id, session] : activeSessions) {
+            if (session) session->send(&syncMsg);
+        }
+    });
+}
+
+std::vector<UserMetadata> ChatManager::getActiveUsers() {
+    std::vector<UserMetadata> activeUsers;
+
+    withSessionsLock([&activeUsers](const auto& sessions) -> void {
+        for (const auto& [id, session] : sessions) {
+            if (session) {
+                if (const UserMetadata& profile = session->getProfile(); !profile.getString(UserAttr::NICKNAME).empty()) {
+                    activeUsers.push_back(profile);
+                }
+            }
+        }
+    });
+
+    return activeUsers;
 }

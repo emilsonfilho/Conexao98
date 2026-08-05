@@ -7,7 +7,7 @@ class IMessagePrinter {
 public:
     virtual ~IMessagePrinter() = default;
 
-    virtual void handle(Message* msg) = 0;
+    virtual std::string format(Message* msg) const = 0;
 };
 
 #endif //CONEXAO98_IMESSAGEPRINTER_H

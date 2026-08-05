@@ -9,7 +9,7 @@
 
 class JoinPrinter : public IMessagePrinter {
 public:
-    void handle(Message *msg) override;
+    std::string format(Message *msg) const override;
 };
 
 

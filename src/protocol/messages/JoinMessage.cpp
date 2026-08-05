@@ -1,6 +1,6 @@
 #include "JoinMessage.h"
 
-JoinMessage::JoinMessage(const std::string &nick): nickname(nick) {}
+JoinMessage::JoinMessage(const UserMetadata& meta): metadata(meta) {}
 
 MessageType JoinMessage::getType() {
     return MessageType::JOIN;
@@ -9,18 +9,18 @@ MessageType JoinMessage::getType() {
 ByteArray JoinMessage::serialize() {
     ByteArray packet;
 
+    // Tipo da mensagem (JOIN)
     const char type = static_cast<char>(getType());
     packet.write(&type, 1);
 
-    const uint16_t nickSize = getNickname().size();
-    packet.write(&nickSize, sizeof(uint16_t));
+    ByteArray metaBytes = metadata.serialize();
 
-    if (nickSize > 0)
-        packet.write(nickname.data(), nickSize);
+    if (metaBytes.size() > 0)
+        packet.write(metaBytes.data(), metaBytes.size());
 
     return packet;
 }
 
-std::string JoinMessage::getNickname() const {
-    return nickname;
+const UserMetadata& JoinMessage::getMetadata() const {
+    return metadata;
 }

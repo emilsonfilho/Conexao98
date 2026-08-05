@@ -1,10 +1,10 @@
 #include "ChatMessage.h"
 
 ChatMessage::ChatMessage(const std::string &content):
-    senderNickname(""), content(content) {}
+    metadata(UserMetadata()), content(content) {}
 
-ChatMessage::ChatMessage(const std::string &senderNickname, const std::string &content):
-    senderNickname(senderNickname), content(content) {}
+ChatMessage::ChatMessage(const UserMetadata& meta, const std::string &content):
+    metadata(meta), content(content) {}
 
 MessageType ChatMessage::getType() {
     return MessageType::CHAT;
@@ -16,19 +16,17 @@ ByteArray ChatMessage::serialize() {
     const char type = static_cast<char>(getType());
     packet.write(&type, 1);
 
-    const uint16_t nickSize = senderNickname.size();
-    packet.write(&nickSize, sizeof(uint16_t));
-
-    if (nickSize > 0)
-        packet.write(senderNickname.data(), nickSize);
+    ByteArray metaBytes = metadata.serialize();
+    if (metaBytes.size() > 0)
+        packet.write(metaBytes.data(), metaBytes.size());
 
     packet.write(content.data(), content.size());
 
     return packet;
 }
 
-std::string ChatMessage::getNickname() const {
-    return senderNickname;
+const UserMetadata& ChatMessage::getMetadata() const {
+    return metadata;
 }
 
 std::string ChatMessage::getContent() const {

@@ -6,6 +6,8 @@
 #define CONEXAO98_USERCOLOR_H
 
 #include <cstdint>
+#include <string>
+#include <vector>
 
 #define COLOR_UPPER_BOUND 6
 
@@ -17,6 +19,17 @@ enum class UserColor : uint8_t {
     YELLOW = 4,
     CYAN = 5,
     MAGENTA = 6
+};
+
+struct ColorConfig {
+    UserColor id;
+    std::string name;
+    std::string ansi;
+};
+
+class ColorRegistry {
+public:
+    static const std::vector<ColorConfig>& getAllColors();
 };
 
 #endif //CONEXAO98_USERCOLOR_H

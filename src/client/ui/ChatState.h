@@ -20,9 +20,12 @@ struct ChatState {
 
     bool isColorMenuOpen = false;
     int selectedColorIndex = 0;
-    std::vector<std::string> colorMenuEntries = {
-        "Vermelho", "Verde", "Azul", "Amarelo", "Ciano", "Magenta"
-    };
+    std::vector<std::string> colorMenuEntries; // precisamos disso porque o FTXUI quer um ponteiro de strings
+
+    ChatState() {
+        for (const auto& config : ColorRegistry::getAllColors())
+            colorMenuEntries.push_back(config.name);
+    }
 };
 
 

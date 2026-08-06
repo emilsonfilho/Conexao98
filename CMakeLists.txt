@@ -60,6 +60,7 @@ add_executable(server src/server/main.cpp
         src/protocol/messages/ChangeColorMessage.h
         src/app/handlers/ChangeColorHandler.cpp
         src/app/handlers/ChangeColorHandler.h
+        src/protocol/UserColor.cpp
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -139,6 +140,7 @@ add_executable(client src/client/main/main.cpp
         src/app/handlers/ChangeColorHandler.h
         src/client/commands/ColorCommand.cpp
         src/client/commands/ColorCommand.h
+        src/protocol/UserColor.cpp
 )
 
 if (WIN32)

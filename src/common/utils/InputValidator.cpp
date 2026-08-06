@@ -1,10 +1,9 @@
 #include "InputValidator.h"
 
 #include <algorithm>
-#include <ws2tcpip.h>
-#include <psdk_inc/_ip_types.h>
 
 #include "../../protocol/UserColor.h"
+#include "../platform/SocketHelper.h"
 
 InputValidator::NicknameError InputValidator::validateNickname(const std::string &nick) {
     if (nick.empty()) return NicknameError::Empty;

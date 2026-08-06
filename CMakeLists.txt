@@ -141,6 +141,8 @@ add_executable(client src/client/main/main.cpp
         src/client/commands/ColorCommand.cpp
         src/client/commands/ColorCommand.h
         src/protocol/UserColor.cpp
+        src/client/commands/CommandRegistry.cpp
+        src/client/commands/CommandRegistry.h
 )
 
 if (WIN32)

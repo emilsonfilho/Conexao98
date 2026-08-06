@@ -20,8 +20,72 @@ ftxui::Color ChatView::getFtxuiColor(const UserColor c) {
 ftxui::Component ChatView::create(ChatState &state, const std::function<void()> &onEnter, const std::function<void(UserColor)>& onColorSelected) {
     ftxui::InputOption inputOption;
     inputOption.on_enter = onEnter;
+    inputOption.cursor_position = &state.cursorPosition;
 
-    const auto input = ftxui::Input(&state.currentInput, "Digite sua mensagem....", inputOption);
+    // Auto-complete
+    inputOption.on_change = [&state] {
+        if (!state.currentInput.empty() and state.currentInput[0] == '/') {
+            state.isCommandMenuOpen = true;
+            state.filteredCommands.clear();
+
+            for (const auto command : state.allCommands)
+                if (command.name.find(state.currentInput) == 0)
+                    state.filteredCommands.push_back(command);
+
+            if (state.selectedCommandIndex >= state.filteredCommands.size())
+                state.selectedCommandIndex = 0;
+
+            if (state.filteredCommands.empty())
+                state.isCommandMenuOpen = false;
+        } else {
+            state.isCommandMenuOpen = false;
+        }
+    };
+
+    const auto rawInput = ftxui::Input(&state.currentInput, "Digite sua mensagem....", inputOption);
+
+    auto inputComponent = rawInput | ftxui::CatchEvent([&state, onEnter](const ftxui::Event &e) {
+        if (!state.isCommandMenuOpen or state.filteredCommands.empty())
+            return false;
+
+        if (e == ftxui::Event::ArrowUp) {
+            state.selectedCommandIndex = std::max(0, state.selectedCommandIndex - 1);
+            return true;
+        }
+
+        if (e == ftxui::Event::ArrowDown) {
+            state.selectedCommandIndex = std::min(
+                static_cast<int>(state.filteredCommands.size()) - 1,
+                state.selectedCommandIndex + 1
+            );
+            return true;
+        }
+
+        const std::string commandName = state.filteredCommands[state.selectedCommandIndex].name;
+
+        if (e == ftxui::Event::Tab) {
+            state.currentInput = commandName + " ";
+            state.cursorPosition = state.currentInput.size();
+            state.isCommandMenuOpen = false;
+            return true;
+        }
+
+        if (e == ftxui::Event::Return) {
+            if (state.currentInput == commandName) {
+                state.isCommandMenuOpen = false;
+                return false;
+            }
+
+            state.currentInput = commandName;
+            state.cursorPosition = state.currentInput.size();
+            state.isCommandMenuOpen = false;
+
+            onEnter();
+            return true;
+        }
+
+        return false;
+    });
 
     ftxui::RadioboxOption radioOption;
     radioOption.transform = [&state](const ftxui::EntryState& entry) {
@@ -71,7 +135,7 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
     });
 
     // Layout
-    auto mainLayout = ftxui::Renderer(input, [&state, input] {
+    auto mainLayout = ftxui::Renderer(inputComponent, [&state, inputComponent] {
         ftxui::Elements msgElements;
         for (const auto& [author, text, color] : state.messages)
             msgElements.push_back(
@@ -90,14 +154,35 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
         if (userElements.empty())
             userElements.push_back(ftxui::text("Só você por aqui...") | ftxui::dim);
 
+        ftxui::Element commandMenuElement = ftxui::emptyElement();
+        if (state.isCommandMenuOpen and !state.filteredCommands.empty()) {
+            ftxui::Elements commandList;
+            for (size_t i = 0; i < state.filteredCommands.size(); i++) {
+                auto item = ftxui::vbox({
+                    ftxui::text(state.filteredCommands[i].name) | ftxui::bold,
+                    ftxui::text(state.filteredCommands[i].description) | ftxui::dim
+                });
+
+                if (i == state.selectedCommandIndex) item |= ftxui::inverted;
+
+                commandList.push_back(item);
+            }
+
+            commandMenuElement = ftxui::window(
+                ftxui::text(" Comandos "),
+                ftxui::vbox(std::move(commandList))
+            ) | ftxui::clear_under;
+        }
+
         return ftxui::window(
             ftxui::text(" Conexão98 "),
             ftxui::hbox({
                 // Lado Esquerdo: Chat e Input
                 ftxui::vbox({
                     ftxui::vbox(std::move(msgElements)) | ftxui::flex,
+                    commandMenuElement,
                     ftxui::separator(),
-                    input->Render()
+                    inputComponent->Render()
                 }) | ftxui::flex,
 
                 ftxui::separator(),

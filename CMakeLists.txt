@@ -61,6 +61,10 @@ add_executable(server src/server/main.cpp
         src/app/handlers/ChangeColorHandler.cpp
         src/app/handlers/ChangeColorHandler.h
         src/protocol/UserColor.cpp
+        src/protocol/messages/LeaveMessage.cpp
+        src/protocol/messages/LeaveMessage.h
+        src/client/printers/LeavePrinter.cpp
+        src/client/printers/LeavePrinter.h
 )
 add_executable(client src/client/main/main.cpp
         src/network/Connection.cpp
@@ -144,6 +148,10 @@ add_executable(client src/client/main/main.cpp
         src/client/commands/CommandRegistry.cpp
         src/client/commands/CommandRegistry.h
         src/client/ui/ChatState.cpp
+        src/protocol/messages/LeaveMessage.cpp
+        src/protocol/messages/LeaveMessage.h
+        src/client/printers/LeavePrinter.cpp
+        src/client/printers/LeavePrinter.h
 )
 
 if (WIN32)

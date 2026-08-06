@@ -7,9 +7,11 @@
 #include "../../protocol/messages/SyncMessage.h"
 #include "../printers/ChatPrinter.h"
 #include "../printers/JoinPrinter.h"
+#include "../printers/LeavePrinter.h"
 
 TUIListener::TUIListener(ChatPresenter &presenter): presenter(presenter) {
     printers.emplace(MessageType::JOIN, std::make_unique<JoinPrinter>());
+    printers.emplace(MessageType::LEAVE, std::make_unique<LeavePrinter>());
 }
 
 void TUIListener::onMessageReceived(Connection &conn, const ByteArray &data) {
@@ -38,7 +40,7 @@ void TUIListener::onMessageReceived(Connection &conn, const ByteArray &data) {
 
     if (msg->getType() == MessageType::CHAT) {
         if (const auto* chatMsg = static_cast<ChatMessage*>(msg.get())) {
-            UserMetadata meta = chatMsg->getMetadata();
+            const UserMetadata meta = chatMsg->getMetadata();
             presenter.addMessage(meta.getString(UserAttr::NICKNAME), chatMsg->getContent(), meta.getColor(UserAttr::COLOR));
         }
 

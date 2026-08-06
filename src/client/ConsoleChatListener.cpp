@@ -7,10 +7,12 @@
 #include "../common/logger/Logger.h"
 #include "printers/ChatPrinter.h"
 #include "printers/JoinPrinter.h"
+#include "printers/LeavePrinter.h"
 
 ConsoleChatListener::ConsoleChatListener() {
     printers.emplace(MessageType::CHAT, std::make_unique<ChatPrinter>());
     printers.emplace(MessageType::JOIN, std::make_unique<JoinPrinter>());
+    printers.emplace(MessageType::LEAVE, std::make_unique<LeavePrinter>());
 }
 
 void ConsoleChatListener::onMessageReceived(Connection &conn, const ByteArray &data) {

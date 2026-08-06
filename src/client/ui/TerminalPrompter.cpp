@@ -112,14 +112,13 @@ UserColor TerminalPrompter::askForColor() {
 
     // \033[XXm inicia a cor
     // \033[0m reseta a cor para o padrão do terminal
-    std::cout << "\nEscolha uma cor para o seu perfil:\n"
-              << "[1] \033[91mVermelho\033[0m\n"
-              << "[2] \033[92mVerde\033[0m\n"
-              << "[3] \033[94mAzul\033[0m\n"
-              << "[4] \033[93mAmarelo\033[0m\n"
-              << "[5] \033[96mCiano\033[0m\n"
-              << "[6] \033[95mMagenta\033[0m\n"
-              << "Digite o numero da sua cor: ";
+    std::cout << "\nEscolha uma cor para o seu perfil:\n";
+
+    for (const auto& color : ColorRegistry::getAllColors()) {
+        std::cout << "[" << static_cast<int>(color.id) << "] " << color.ansi << color.name << "\033[0m\n";
+    }
+
+    std::cout << "Digite o numero da sua cor: ";
     do {
         std::getline(std::cin, input);
         const auto error = InputValidator::validateColor(input, colorId);

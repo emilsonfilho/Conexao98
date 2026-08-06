@@ -10,6 +10,7 @@
 #include "messages/SyncMessage.h"
 #include "UserMetadata.h"
 #include "messages/ChangeColorMessage.h"
+#include "messages/LeaveMessage.h"
 
 std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
     char typeByte = data.data()[0];
@@ -77,6 +78,17 @@ std::unique_ptr<Message> MessageFactory::create(const ByteArray &data) {
         const auto color = static_cast<UserColor>(colorByte);
 
         return std::make_unique<ChangeColorMessage>(color);
+    }
+
+    if (type == MessageType::LEAVE) {
+        if (data.size() < 4) {
+            Logger::getLogger().error("Malformed LeaveMessage");
+            return nullptr;
+        }
+
+        size_t bytesRead = 0;
+        UserMetadata meta = UserMetadata::deserialize(data.data() + 1, data.size() - 1, bytesRead);
+        return std::make_unique<LeaveMessage>(meta);
     }
 
     Logger::getLogger().error("No MessageType corresponding");

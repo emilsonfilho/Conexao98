@@ -10,9 +10,15 @@ ChatPresenter::ChatPresenter(std::function<void(std::string)> onSend)
 void ChatPresenter::show() {
     const auto component = ChatView::create(state, [this] {
         if (!state.currentInput.empty()) {
-            onSendMessage(state.currentInput);
-            state.messages.push_back({ "Você", state.currentInput, UserColor::DEFAULT });
+            std::string inputCopy = state.currentInput;
+
+            onSendMessage(inputCopy);
+
+            if (inputCopy.empty() or inputCopy[0] != '/')
+                state.messages.push_back({ "Você", state.currentInput, UserColor::DEFAULT });
+
             state.currentInput.clear();
+            state.cursorPosition = 0;
         }
     }, [this](UserColor newColor) {
         if (onChangeColorCallback) onChangeColorCallback(newColor);

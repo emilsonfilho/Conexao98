@@ -1,6 +1,7 @@
 #include "ChatManager.h"
 
 #include "../common/logger/Logger.h"
+#include "../protocol/messages/LeaveMessage.h"
 #include "../protocol/messages/SyncMessage.h"
 #include "handlers/ChangeColorHandler.h"
 #include "handlers/ChatHandler.h"
@@ -78,11 +79,18 @@ void ChatManager::onIncomingConnection(Socket clientSock, sockaddr_in clientData
 }
 
 void ChatManager::onDisconnected(Connection &conn) {
-    const ConnectionId connId = conn.getId();
+    UserMetadata deadUserMeta;
+    bool shouldBroadcastLeave = false;
 
     {
+        const ConnectionId connId = conn.getId();
         std::lock_guard<std::mutex> lock(sessionMutex);
         if (const auto it = sessions.find(connId); it != sessions.end()) {
+            deadUserMeta = it->second->getProfile();
+
+            if (!deadUserMeta.getString(UserAttr::NICKNAME).empty())
+                shouldBroadcastLeave = true;
+
             reaper.moveToGraveyard(std::move(it->second));
             sessions.erase(it);
         }
@@ -90,10 +98,14 @@ void ChatManager::onDisconnected(Connection &conn) {
 
     const std::vector<UserMetadata> userList = getActiveUsers();
     SyncMessage syncMsg(userList);
+    LeaveMessage leaveMsg(deadUserMeta);
 
-    withSessionsLock([&syncMsg](auto& activeSessions) -> void {
+    withSessionsLock([&](auto& activeSessions) -> void {
         for (auto& [id, session] : activeSessions) {
-            if (session) session->send(&syncMsg);
+            if (session) {
+                if (shouldBroadcastLeave) session->send(&leaveMsg);
+                session->send(&syncMsg);
+            }
         }
     });
 }

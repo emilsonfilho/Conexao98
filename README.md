@@ -17,7 +17,7 @@ Este projeto está em evolução constante. Aqui estão os próximos passos arqu
 - [x] **Thread Safety (Mutex):** Implementar _mutex_ para proteger estruturas de dados compartilhadas contra acesso indevido da sessão crítica.
 - [x] **Thread Safety (Lock Guard):** Refatorar os bloqueios manuais aplicando para garantir o *unlock* automático e prevenir *deadlocks* no servidor.
 - [x] **Desconexão Graciosa:** Desenvolver um mecanismo para capturar quedas de conexão ou retornos vazios do *socket*, limpando a sessão com segurança e enviando um *broadcast* de saída para a sala.
-- [ ] **Interface de Usuário (TUI/GUI):** Substituir o console puro por uma interface robusta para o cliente.
+- [x] **Interface de Usuário (TUI/GUI):** Substituir o console puro por uma interface robusta para o cliente.
 - [ ] **Segurança:** Implementar criptografia ponta-a-ponta e Handshake seguro na conexão inicial.
 
 ## ⚙️ Como rodar (Windows, por enquanto)
@@ -27,16 +27,17 @@ Este projeto está em evolução constante. Aqui estão os próximos passos arqu
 * **Compilador C++** compatível com C++14/17 (MinGW/GCC ou MSVC)
 
 ### Passo a Passo (Terminal)
-1. Clone o repositório
+1. Clone o repositório e abra-o
   ```bash
-    git clone https://github.com/emilsonfilho/Conexao98.git 
+    git clone https://github.com/emilsonfilho/Conexao98.git
+    cd Conexao98
   ```
 2. Crie a pasta de build e compile
    ```bash
      mkdir build
      cd build
      cmake ..
-     cmake --build .
+     cmake --build . -j 10
    ```
 3. Inicie os executáveis. 💣 **Importante**: Execute primeiro o servidor
    ```bash
@@ -50,6 +51,7 @@ Se você, assim como eu, usa o CLion, a vida é bem mais fácil:
 2. _File > Open_
 3. Selecione a pasta raiz do projeto
 4. Aperte o play (ou _Shift+F10_) no server
-5. Aperte o plau nos clients (para criar mais de um executável no CLion, faça _Edit Configurations > client > Allow multiple instances_)
+5. Configure exibição em janela externa (obrigatório para funcionamento correto da FTXUI): _Edit Configurations > Run in external console_
+6. Aperte o play nos clients (para criar mais de um executável no CLion, faça _Edit Configurations > client > Allow multiple instances_)
 
 Made with ❤️ by [Emilson Filho](https://github.com/emilsonfilho)

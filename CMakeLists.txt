@@ -143,6 +143,7 @@ add_executable(client src/client/main/main.cpp
         src/protocol/UserColor.cpp
         src/client/commands/CommandRegistry.cpp
         src/client/commands/CommandRegistry.h
+        src/client/ui/ChatState.cpp
 )
 
 if (WIN32)

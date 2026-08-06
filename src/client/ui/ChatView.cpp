@@ -29,7 +29,7 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
             state.filteredCommands.clear();
 
             for (const auto command : state.allCommands)
-                if (command.name.find(state.currentInput) == 0)
+                if (state.currentInput.size() <= command.name.size() and command.name.find(state.currentInput) == 0)
                     state.filteredCommands.push_back(command);
 
             if (state.selectedCommandIndex >= state.filteredCommands.size())
@@ -90,9 +90,12 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
     ftxui::RadioboxOption radioOption;
     radioOption.transform = [&state](const ftxui::EntryState& entry) {
         const auto it = std::find(state.colorMenuEntries.begin(), state.colorMenuEntries.end(), entry.label);
-        const size_t index = std::distance(state.colorMenuEntries.begin(), it);
 
-        const auto uColor = static_cast<UserColor>(index + 1);
+        auto uColor = UserColor::DEFAULT;
+        if (it != state.colorMenuEntries.end()) {
+            const size_t index = std::distance(state.colorMenuEntries.begin(), it);
+            uColor = static_cast<UserColor>(index + 1);
+        }
 
         const ftxui::Color c = getFtxuiColor(uColor);
 

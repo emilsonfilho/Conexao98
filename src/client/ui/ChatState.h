@@ -34,13 +34,7 @@ struct ChatState {
     int selectedCommandIndex = 0;
     bool isCommandMenuOpen = false;
 
-    ChatState() {
-        for (const auto& config : ColorRegistry::getAllColors())
-            colorMenuEntries.push_back(config.name);
-
-        for (const auto& command : CommandRegistry::getAvailableCommands())
-            allCommands.push_back({ command.trigger, command.description });
-    }
+    ChatState();
 };
 
 

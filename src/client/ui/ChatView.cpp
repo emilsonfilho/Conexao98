@@ -1,9 +1,11 @@
 #include "ChatView.h"
 
+#include <algorithm>
+
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/component_options.hpp"
 
-ftxui::Color ChatView::getFtxuiColor(UserColor c) {
+ftxui::Color ChatView::getFtxuiColor(const UserColor c) {
     switch (c) {
         case UserColor::RED: return ftxui::Color::RedLight;
         case UserColor::GREEN: return ftxui::Color::GreenLight;
@@ -20,7 +22,28 @@ ftxui::Component ChatView::create(ChatState &state, const std::function<void()> 
     inputOption.on_enter = onEnter;
 
     const auto input = ftxui::Input(&state.currentInput, "Digite sua mensagem....", inputOption);
-    auto radiobox = ftxui::Radiobox(&state.colorMenuEntries, &state.selectedColorIndex);
+
+    ftxui::RadioboxOption radioOption;
+    radioOption.transform = [&state](const ftxui::EntryState& entry) {
+        const auto it = std::find(state.colorMenuEntries.begin(), state.colorMenuEntries.end(), entry.label);
+        const size_t index = std::distance(state.colorMenuEntries.begin(), it);
+
+        const auto uColor = static_cast<UserColor>(index + 1);
+
+        const ftxui::Color c = getFtxuiColor(uColor);
+
+        auto element = ftxui::hbox({
+            ftxui::text(entry.state ? "(*) " : "() "),
+            ftxui::text(entry.label) | ftxui::color(c)
+        });
+
+        if (entry.active)
+            element |= ftxui::inverted;
+
+        return element;
+    };
+
+    auto radiobox = ftxui::Radiobox(&state.colorMenuEntries, &state.selectedColorIndex, radioOption);
 
     // Modal
     auto btnConfirm = ftxui::Button("Confirmar", [&state, onColorSelected] {
